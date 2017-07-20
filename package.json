@@ -1,0 +1,27 @@
+{
+  "name": "shootergame",
+  "version": "1.0.0",
+  "description": "Shooter Game Phaser",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lnesi/shooter_game_phaser.git"
+  },
+  "keywords": [
+    "Phaser"
+  ],
+  "author": "Luis Nesi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lnesi/shooter_game_phaser/issues"
+  },
+  "homepage": "https://github.com/lnesi/shooter_game_phaser#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-webserver": "^0.9.1",
+    "phaser": "^2.6.2"
+  }
+}

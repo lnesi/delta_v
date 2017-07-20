@@ -1,0 +1,16 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "module": "system",
+        "outFile": "build/js/main.js",
+        "sourceMap": true,
+        "noImplicitAny": true
+    },
+    "include": [
+        "src/**/*",
+        "node_modules/phaser/typescript/phaser.comments.d.ts"
+    ],
+    "exclude": [
+        "**/*.spec.ts"
+    ]
+}
