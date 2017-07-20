@@ -7,6 +7,8 @@ class HeroGun extends Phaser.Group{
 	bullets:Phaser.Group
 	ship:HeroShip
 	sfx:Phaser.Sound;
+	currentBullet:Phaser.Sprite;
+
 	constructor(ship:HeroShip){
 		super(ship.state.game);
 		this.state=ship.state;
@@ -15,7 +17,7 @@ class HeroGun extends Phaser.Group{
 		this.bullets = new Phaser.Group(this.state.game,ship.bulletsContainer,'bulletGroup',false,true,Phaser.Physics.ARCADE);
 
 	}
-
+	
 	fire(){
 		if(this.state.game.time.now>this.deltaTime){
 			var bullet = this.bullets.getFirstExists(false);

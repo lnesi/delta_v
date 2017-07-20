@@ -2,7 +2,7 @@ class HeroShip{
 	state: Phaser.State
 	displayGroup:Phaser.Group
 	physics_body:Phaser.Sprite
-	speed:number=200
+	speed:number=300
 	velocity:Phaser.Point=new Phaser.Point(0,0);
 	gun:HeroGun
 	bulletsContainer:Phaser.Group;
@@ -31,20 +31,20 @@ class HeroShip{
 		this.physics_body.height=400;
 		state.heroLayer.addChild(this.physics_body);
 
-		var shipEngine = new Phaser.Sprite(state.game,0,0,'mainsprite', 'engine3.png');
-		shipEngine.anchor.setTo(0.5,0.5);
-		shipEngine.y=this.shipBody.height/2+5;
+		// var shipEngine = new Phaser.Sprite(state.game,0,0,'mainsprite', 'engine3.png');
+		// shipEngine.anchor.setTo(0.5,0.5);
+		// shipEngine.y=this.shipBody.height/2+5;
 		
 
-		var shipFire = new Phaser.Sprite(this.state.game,0,0,'mainsprite');
-		var frames_fire=Phaser.Animation.generateFrameNames('fire', 8, 10, '.png', 2);
-		shipFire.animations.add('on', frames_fire, 30, true);
-		shipFire.animations.play('on');
-		shipFire.anchor.setTo(0.5,0.5);
-		shipFire.y=shipEngine.y+(shipEngine.height);
+		// var shipFire = new Phaser.Sprite(this.state.game,0,0,'mainsprite');
+		// var frames_fire=Phaser.Animation.generateFrameNames('fire', 8, 10, '.png', 2);
+		// shipFire.animations.add('on', frames_fire, 30, true);
+		// shipFire.animations.play('on');
+		// shipFire.anchor.setTo(0.5,0.5);
+		// shipFire.y=shipEngine.y+(shipEngine.height);
 		
-		this.displayGroup.add(shipFire);
-		this.displayGroup.add(shipEngine);
+		// this.displayGroup.add(shipFire);
+		// this.displayGroup.add(shipEngine);
 		this.displayGroup.add(this.shipBody);
 
 		this.gun=new HeroGunLevel1(this);
