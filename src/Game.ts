@@ -1,15 +1,3 @@
-class PhaserGame extends Phaser.Game{
-    customUpdates:Array<any>
-    registerUpdate(callback:any){
-		return this.customUpdates.push(callback);
-    }
-
-    unregisterUpdate(position:number){
-		this.customUpdates.splice(position,1);
-    }
-
-}
-
 
 class Game extends Phaser.Game{
 	static globalWidth:number=480;

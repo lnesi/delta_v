@@ -1,4 +1,4 @@
-class HeroGun{
+class HeroGun extends Phaser.Group{
 	state:Phaser.State
 	gunBody:Phaser.Sprite
 	reloadTime:number=500
@@ -8,6 +8,7 @@ class HeroGun{
 	ship:HeroShip
 	sfx:Phaser.Sound;
 	constructor(ship:HeroShip){
+		super(ship.state.game);
 		this.state=ship.state;
 		this.ship=ship;
 		this.deltaTime=this.state.game.time.now;
@@ -23,6 +24,5 @@ class HeroGun{
 			this.deltaTime=this.state.game.time.now+this.reloadTime;
 			this.sfx.play();
 		}
-		
 	}
 }

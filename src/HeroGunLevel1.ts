@@ -3,11 +3,11 @@ class HeroGunLevel1 extends HeroGun{
 		super(ship);
 
 		this.bulletSpeed=1000;
-		this.reloadTime=250;
+		this.reloadTime=500;
 
 		this.gunBody = new Phaser.Sprite(this.state.game,0,0,'mainsprite',"gun06.png");
 		this.gunBody.y=-this.gunBody.height;
-		ship.displayGroup.add(this.gunBody,false,0);
+		this.add(this.gunBody,false,0);
 		this.gunBody.anchor.setTo(0.5,0.5);
 		this.gunBody.angle=180;
 

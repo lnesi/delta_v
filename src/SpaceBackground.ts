@@ -1,8 +1,8 @@
 class SpaceBackground extends Phaser.TileSprite{
 
-	constructor(state:Phaser.State){
+	constructor(state:PlayState){
 		super(state.game,0,0,Game.globalWidth,Game.globalHeight,'BackgroundDarkPurple')
-		state.stage.addChildAt(this,0);
+		state.backgroundLayer.addChild(this);
 	}
 	
 	update(){
