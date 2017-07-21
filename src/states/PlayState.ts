@@ -22,11 +22,11 @@ class PlayState extends Phaser.State{
 		this.hero.y=500;
 		this.heroLayer.add(this.hero);
 
-		this.enemy=new Enemy01(this);
-		this.enemyLayer.addChild(this.enemy);
-		this.enemy.x=0;
-		this.enemy.y=0;
-		this.enemy.init();
+		// this.enemy=new Enemy01(this);
+		// this.enemyLayer.addChild(this.enemy);
+		// this.enemy.x=0;
+		// this.enemy.y=0;
+		// this.enemy.init();
 		
 
 	}
@@ -52,7 +52,7 @@ class PlayState extends Phaser.State{
 
 	render(){
 		//this.game.debug.body(this.hero.body);
-		//this.game.debug.body(this.enemy.body);
-	
+		//this.game.debug.body(this.hero.shipBody);
+		//this.game.debug.bodyInfo(this.hero.shipBody,10,10);
 	}
 }
