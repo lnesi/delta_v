@@ -24,13 +24,16 @@ var SpaceShip = (function (_super) {
 ///<reference path="objects/SpaceShip"/>
 var Enemy = (function (_super) {
     __extends(Enemy, _super);
-    function Enemy(state, sprite_id, speed) {
-        if (speed === void 0) { speed = 50; }
+    function Enemy(state, sprite_id, maxSpeed, accelaration) {
+        if (maxSpeed === void 0) { maxSpeed = 50; }
+        if (accelaration === void 0) { accelaration = 10; }
         var _this = _super.call(this, state.game) || this;
         _this.moveWeight = 0;
         _this.moveRelease = 0;
-        _this.speed = 0;
-        _this.speed = speed;
+        _this.accelaration = 0;
+        _this.maxSpeed = 0;
+        _this.maxSpeed = maxSpeed;
+        _this.accelaration = accelaration;
         _this.state = state;
         _this.shipBody = new Phaser.Sprite(state.game, 0, 0, sprite_id);
         state.physics.enable(_this.shipBody, Phaser.Physics.ARCADE);
@@ -50,12 +53,12 @@ var Enemy = (function (_super) {
         //this.body.body.velocity.y=vY//>this.moveRelease?vY:this.moveRelease;
         var a = this.state.hero.getX() - this.getX();
         var b = this.state.hero.getY() - this.getY();
-        var vx = this.speed * Math.sin(Math.atan2(a, b));
-        var vy = this.speed * Math.cos(Math.atan2(a, b));
+        var vx = this.maxSpeed * Math.sin(Math.atan2(a, b));
+        var vy = this.maxSpeed * Math.cos(Math.atan2(a, b));
         // console.log(vx,vy)
-        this.shipBody.body.velocity.y = vy;
+        this.shipBody.body.acceleration.y = vy;
         this.shipBody.body.rotation = Math.atan2(a, b) * (-180 / Math.PI);
-        this.shipBody.body.velocity.x = vx;
+        this.shipBody.body.acceleration.x = vx;
         this.game.physics.arcade.overlap(this.shipBody, this.state.hero.gun.bullets, this.collisionHandler, null, this);
     };
     Enemy.prototype.collisionHandler = function (enemy, bullet) {

@@ -4,10 +4,12 @@ class Enemy extends SpaceShip{
 	
 	moveWeight:number=0;
 	moveRelease:number=0;
-	speed:number=0;
-	constructor(state:PlayState,sprite_id:string,speed:number=50){
+	accelaration:number=0;
+	maxSpeed:number=0;
+	constructor(state:PlayState,sprite_id:string,maxSpeed:number=50,accelaration:number=10){
 		super(state.game);
-		this.speed=speed;
+		this.maxSpeed=maxSpeed;
+		this.accelaration=accelaration;
 		this.state=state;
 		
 		this.shipBody = new Phaser.Sprite(state.game,0,0,sprite_id);
@@ -37,14 +39,14 @@ class Enemy extends SpaceShip{
 		 var a = this.state.hero.getX()-this.getX();
 		 var b = this.state.hero.getY()-this.getY();
 
-		 var vx=this.speed*Math.sin(Math.atan2(a,b));
-		 var vy=this.speed*Math.cos(Math.atan2(a,b));
+		 var vx=this.maxSpeed*Math.sin(Math.atan2(a,b));
+		 var vy=this.maxSpeed*Math.cos(Math.atan2(a,b));
 
 
 		// console.log(vx,vy)
-		 this.shipBody.body.velocity.y=vy;
+		 this.shipBody.body.acceleration.y=vy;
 		 this.shipBody.body.rotation=Math.atan2(a,b)*(-180 / Math.PI);
-		 this.shipBody.body.velocity.x=vx;
+		 this.shipBody.body.acceleration.x=vx;
 		
 		
 		 this.game.physics.arcade.overlap(this.shipBody, this.state.hero.gun.bullets, this.collisionHandler, null, this);
