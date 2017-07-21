@@ -1,6 +1,6 @@
-class Enemy extends Phaser.Group{
+///<reference path="objects/SpaceShip"/>
+class Enemy extends SpaceShip{
 	state:PlayState
-	body:Phaser.Sprite
 	
 	moveWeight:number=0;
 	moveRelease:number=0;
@@ -8,11 +8,11 @@ class Enemy extends Phaser.Group{
 	constructor(state:PlayState){
 		super(state.game);
 		this.state=state;
-		this.body = new Phaser.Sprite(state.game,0,0,  'mainsprite', 'enemyBlack2.png');
-		state.physics.enable(this.body,Phaser.Physics.ARCADE);
-		this.body.anchor.setTo(0.5,0.5);
+		this.shipBody = new Phaser.Sprite(state.game,0,0,  'mainsprite', 'enemyBlack2.png');
+		state.physics.enable(this.shipBody,Phaser.Physics.ARCADE);
+		this.shipBody.anchor.setTo(0.5,0.5);
 
-		this.addChild(this.body);
+		this.addChild(this.shipBody);
 
 		
 		
@@ -20,38 +20,25 @@ class Enemy extends Phaser.Group{
 	}
 
 	init(){
-		console.log("hero",this.state.hero.physics_body.position);
-		console.log("enemy",this.body.body.position);
 
 	}
 	
-	setX(x:number){
-		this.body.body.position.x=x
-	}
-	setY(y:number){
-		this.body.body.position.y=y
-	}
-	getX():number{
-		return this.body.body.position.x+(this.body.width/2)
-	}
-	getY():number{
-		return this.body.body.position.y+(this.body.height/2)
-	}
 	update(){
 		 //console.log(this.state.hero.physics_body.position.x,this.body.body.position.x);
 		 //this.body.body.position.x=this.state.hero.physics_body.position.x-(this.body.width/2);
 		// this.body.body.position.y=this.state.hero.physics_body.position.y-(this.body.height/2);
-		 this.body.body.velocity.x=this.state.hero.physics_body.position.x-(this.getX()+this.moveWeight);
-		 this.body.body.velocity.y=this.state.hero.physics_body.position.y-(this.getY()+this.moveWeight);
+		 //this.body.body.velocity.x=this.state.hero.physics_body.position.x-(this.getX()+this.moveWeight);
+		 //this.body.body.velocity.y=this.state.hero.physics_body.position.y-(this.getY()+this.moveWeight);
 		 //var vY=this.state.hero.physics_body.position.y-this.body.body.position.y-this.moveWeight;
 		 //this.body.body.velocity.y=vY//>this.moveRelease?vY:this.moveRelease;
-		 
+		 this.shipBody.body.velocity.y=this.state.hero.getY()-this.getY()
+		 this.shipBody.body.velocity.x=this.state.hero.getX()-this.getX()
 		 //Physics
-		 this.game.physics.arcade.overlap(this.body, this.state.hero.gun.bullets, this.collisionHandler, null, this);
+		 this.game.physics.arcade.overlap(this.shipBody, this.state.hero.gun.bullets, this.collisionHandler, null, this);
 	}
 
 	collisionHandler(enemy:Phaser.Sprite,bullet:Phaser.Sprite){
-		bullet.destroy();
+		bullet.kill();
 		var explosion=new Phaser.Sprite(this.state.game,this.getX(),this.getY(),'explosion');
 		explosion.anchor.setTo(0.5,0.5);
 		explosion.animations.add('explosion');

@@ -6,7 +6,7 @@ class Boot extends Phaser.State{
 		this.load.image('BackgroundDarkPurple','assets/img/darkPurple.png');
 		this.load.spritesheet('explosion','assets/img/explosion.png',64,64);
 		this.load.atlasXML('mainsprite','assets/sprites/sheet.png','assets/sprites/sheet.xml');
-		this.load.atlasJSONArray('hero_ship','assets/sprites/hero_ship.png','assets/sprites/hero_ship.json');
+		this.load.atlasJSONArray('hero_ship_0','assets/sprites/hero_ship_0.png','assets/sprites/hero_ship_0.json');
 		this.load.audio('sfx_laser1',"assets/audio/sfx_laser1.ogg");
 	}
 	
