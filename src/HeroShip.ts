@@ -3,7 +3,7 @@
 class HeroShip extends SpaceShip{
 	state: PlayState
 	life:number=100
-	speed:number=300
+	speed:number=200
 	gun:HeroGun
 	movementControls:KeyInput
 	fireControl:Phaser.Key
@@ -50,24 +50,24 @@ class HeroShip extends SpaceShip{
 
 	update(){
 		//this.shipBody.animations.play("stand");
-		this.shipBody.body.velocity.x=0;
-		this.shipBody.body.velocity.y=0;
+		this.shipBody.body.acceleration.x=0;
+		this.shipBody.body.acceleration.y=0;
 
 		if (this.movementControls.left.isDown){
 			this.currentMovement="left";
-	        this.shipBody.body.velocity.x=-this.speed;
+	        this.shipBody.body.acceleration.x=-this.speed;
 	    }else if(this.movementControls.right.isDown){
 	    	
 	    	this.currentMovement="right";
-	        this.shipBody.body.velocity.x=this.speed;
+	        this.shipBody.body.acceleration.x=this.speed;
 	    }else if(this.movementControls.up.isDown){
 	    	
 	    	this.currentMovement="up";
-	        this.shipBody.body.velocity.y=-this.speed;
+	        this.shipBody.body.acceleration.y=-this.speed;
 	    }else if(this.movementControls.down.isDown){
 	    	
 	    	this.currentMovement="down";
-	        this.shipBody.body.velocity.y=this.speed;
+	        this.shipBody.body.acceleration.y=this.speed;
 	    }else{
 	    	this.currentMovement="stand";
 	    	

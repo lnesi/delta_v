@@ -135,7 +135,7 @@ var HeroShip = (function (_super) {
     function HeroShip(state) {
         var _this = _super.call(this, state.game) || this;
         _this.life = 100;
-        _this.speed = 300;
+        _this.speed = 200;
         _this.currentMovement = "stand";
         _this.deltaTime = 0;
         _this.state = state;
@@ -172,23 +172,23 @@ var HeroShip = (function (_super) {
     };
     HeroShip.prototype.update = function () {
         //this.shipBody.animations.play("stand");
-        this.shipBody.body.velocity.x = 0;
-        this.shipBody.body.velocity.y = 0;
+        this.shipBody.body.acceleration.x = 0;
+        this.shipBody.body.acceleration.y = 0;
         if (this.movementControls.left.isDown) {
             this.currentMovement = "left";
-            this.shipBody.body.velocity.x = -this.speed;
+            this.shipBody.body.acceleration.x = -this.speed;
         }
         else if (this.movementControls.right.isDown) {
             this.currentMovement = "right";
-            this.shipBody.body.velocity.x = this.speed;
+            this.shipBody.body.acceleration.x = this.speed;
         }
         else if (this.movementControls.up.isDown) {
             this.currentMovement = "up";
-            this.shipBody.body.velocity.y = -this.speed;
+            this.shipBody.body.acceleration.y = -this.speed;
         }
         else if (this.movementControls.down.isDown) {
             this.currentMovement = "down";
-            this.shipBody.body.velocity.y = this.speed;
+            this.shipBody.body.acceleration.y = this.speed;
         }
         else {
             this.currentMovement = "stand";
