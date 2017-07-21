@@ -22,11 +22,11 @@ class PlayState extends Phaser.State{
 		this.hero.y=500;
 		this.heroLayer.add(this.hero);
 
-		// this.enemy=new Enemy(this);
-		// this.enemyLayer.addChild(this.enemy);
-		// this.enemy.x=-200;
-		// this.enemy.y=-500;
-		// this.enemy.init();
+		this.enemy=new Enemy01(this);
+		this.enemyLayer.addChild(this.enemy);
+		this.enemy.x=0;
+		this.enemy.y=0;
+		this.enemy.init();
 		
 
 	}

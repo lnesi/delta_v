@@ -24,12 +24,15 @@ var SpaceShip = (function (_super) {
 ///<reference path="objects/SpaceShip"/>
 var Enemy = (function (_super) {
     __extends(Enemy, _super);
-    function Enemy(state) {
+    function Enemy(state, sprite_id, speed) {
+        if (speed === void 0) { speed = 50; }
         var _this = _super.call(this, state.game) || this;
         _this.moveWeight = 0;
         _this.moveRelease = 0;
+        _this.speed = 0;
+        _this.speed = speed;
         _this.state = state;
-        _this.shipBody = new Phaser.Sprite(state.game, 0, 0, 'mainsprite', 'enemyBlack2.png');
+        _this.shipBody = new Phaser.Sprite(state.game, 0, 0, sprite_id);
         state.physics.enable(_this.shipBody, Phaser.Physics.ARCADE);
         _this.shipBody.anchor.setTo(0.5, 0.5);
         _this.addChild(_this.shipBody);
@@ -45,9 +48,14 @@ var Enemy = (function (_super) {
         //this.body.body.velocity.y=this.state.hero.physics_body.position.y-(this.getY()+this.moveWeight);
         //var vY=this.state.hero.physics_body.position.y-this.body.body.position.y-this.moveWeight;
         //this.body.body.velocity.y=vY//>this.moveRelease?vY:this.moveRelease;
-        this.shipBody.body.velocity.y = this.state.hero.getY() - this.getY();
-        this.shipBody.body.velocity.x = this.state.hero.getX() - this.getX();
-        //Physics
+        var a = this.state.hero.getX() - this.getX();
+        var b = this.state.hero.getY() - this.getY();
+        var vx = this.speed * Math.sin(Math.atan2(a, b));
+        var vy = this.speed * Math.cos(Math.atan2(a, b));
+        // console.log(vx,vy)
+        this.shipBody.body.velocity.y = vy;
+        this.shipBody.body.rotation = Math.atan2(a, b) * (-180 / Math.PI);
+        this.shipBody.body.velocity.x = vx;
         this.game.physics.arcade.overlap(this.shipBody, this.state.hero.gun.bullets, this.collisionHandler, null, this);
     };
     Enemy.prototype.collisionHandler = function (enemy, bullet) {
@@ -62,6 +70,13 @@ var Enemy = (function (_super) {
     };
     return Enemy;
 }(SpaceShip));
+var Enemy01 = (function (_super) {
+    __extends(Enemy01, _super);
+    function Enemy01(state) {
+        return _super.call(this, state, "enemy_01", 50) || this;
+    }
+    return Enemy01;
+}(Enemy));
 var Game = (function (_super) {
     __extends(Game, _super);
     function Game() {
@@ -223,6 +238,7 @@ var Boot = (function (_super) {
         this.load.spritesheet('explosion', 'assets/img/explosion.png', 64, 64);
         this.load.atlasXML('mainsprite', 'assets/sprites/sheet.png', 'assets/sprites/sheet.xml');
         this.load.atlasJSONArray('hero_ship_0', 'assets/sprites/hero_ship_0.png', 'assets/sprites/hero_ship_0.json');
+        this.load.atlasJSONArray('enemy_01', 'assets/sprites/enemy_01.png', 'assets/sprites/enemy_01.json');
         this.load.image('hero_fire_bullet', 'assets/img/hero_fire_bullet.png');
         this.load.audio('sfx_laser1', "assets/audio/sfx_laser1.ogg");
     };
@@ -250,11 +266,11 @@ var PlayState = (function (_super) {
         this.hero.x = 240;
         this.hero.y = 500;
         this.heroLayer.add(this.hero);
-        // this.enemy=new Enemy(this);
-        // this.enemyLayer.addChild(this.enemy);
-        // this.enemy.x=-200;
-        // this.enemy.y=-500;
-        // this.enemy.init();
+        this.enemy = new Enemy01(this);
+        this.enemyLayer.addChild(this.enemy);
+        this.enemy.x = 0;
+        this.enemy.y = 0;
+        this.enemy.init();
     };
     PlayState.prototype.setupControls = function () {
     };

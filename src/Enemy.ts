@@ -4,11 +4,13 @@ class Enemy extends SpaceShip{
 	
 	moveWeight:number=0;
 	moveRelease:number=0;
-
-	constructor(state:PlayState){
+	speed:number=0;
+	constructor(state:PlayState,sprite_id:string,speed:number=50){
 		super(state.game);
+		this.speed=speed;
 		this.state=state;
-		this.shipBody = new Phaser.Sprite(state.game,0,0,  'mainsprite', 'enemyBlack2.png');
+		
+		this.shipBody = new Phaser.Sprite(state.game,0,0,sprite_id);
 		state.physics.enable(this.shipBody,Phaser.Physics.ARCADE);
 		this.shipBody.anchor.setTo(0.5,0.5);
 
@@ -31,9 +33,20 @@ class Enemy extends SpaceShip{
 		 //this.body.body.velocity.y=this.state.hero.physics_body.position.y-(this.getY()+this.moveWeight);
 		 //var vY=this.state.hero.physics_body.position.y-this.body.body.position.y-this.moveWeight;
 		 //this.body.body.velocity.y=vY//>this.moveRelease?vY:this.moveRelease;
-		 this.shipBody.body.velocity.y=this.state.hero.getY()-this.getY()
-		 this.shipBody.body.velocity.x=this.state.hero.getX()-this.getX()
-		 //Physics
+
+		 var a = this.state.hero.getX()-this.getX();
+		 var b = this.state.hero.getY()-this.getY();
+
+		 var vx=this.speed*Math.sin(Math.atan2(a,b));
+		 var vy=this.speed*Math.cos(Math.atan2(a,b));
+
+
+		// console.log(vx,vy)
+		 this.shipBody.body.velocity.y=vy;
+		 this.shipBody.body.rotation=Math.atan2(a,b)*(-180 / Math.PI);
+		 this.shipBody.body.velocity.x=vx;
+		
+		
 		 this.game.physics.arcade.overlap(this.shipBody, this.state.hero.gun.bullets, this.collisionHandler, null, this);
 	}
 
