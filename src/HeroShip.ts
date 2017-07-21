@@ -7,19 +7,31 @@ class HeroShip extends SpaceShip{
 	gun:HeroGun
 	movementControls:KeyInput
 	fireControl:Phaser.Key
+	currentMovement:string="stand"
 	constructor(state:PlayState){
 		super(state.game);
 
 	 	this.state=state;
 	
 		this.shipBody = new Phaser.Sprite(state.game,0,0,"hero_ship_0");
-		console.log(Phaser.Animation.generateFrameNames('hero_left_', 0, 5, '.png', 4));
+		
 		this.shipBody.animations.add('stand',Phaser.Animation.generateFrameNames('hero_stand_', 0, 5, '.png', 4),24,true);
 		this.shipBody.animations.add('left',Phaser.Animation.generateFrameNames('hero_left_', 0, 5, '.png', 4),24,false);
 		this.shipBody.animations.add('right',Phaser.Animation.generateFrameNames('hero_right_', 0, 5, '.png', 4),24,false);
 		this.shipBody.animations.add('up',Phaser.Animation.generateFrameNames('hero_up_', 0, 5, '.png', 4),24,false);
 		this.shipBody.animations.add('down',Phaser.Animation.generateFrameNames('hero_down_', 0, 5, '.png', 4),24,false);
+		this.shipBody.animations.add('fire_stand',Phaser.Animation.generateFrameNames('hero_fire_stand_', 0, 2, '.png', 4),24,false);
+		this.shipBody.animations.add('fire_up',Phaser.Animation.generateFrameNames('hero_fire_stand_', 0, 2, '.png', 4),24,false);
+		this.shipBody.animations.add('fire_down',Phaser.Animation.generateFrameNames('hero_fire_stand_', 0, 2, '.png', 4),24,false);
+		this.shipBody.animations.add('fire_left',Phaser.Animation.generateFrameNames('hero_fire_left_', 0, 2, '.png', 4),24,false);
+		this.shipBody.animations.add('fire_right',Phaser.Animation.generateFrameNames('hero_fire_right_', 0, 2, '.png', 4),24,false);
+		this.shipBody.animations.getAnimation("fire_stand").onComplete.add(this.gunFire.bind(this));
+		this.shipBody.animations.getAnimation("fire_up").onComplete.add(this.gunFire.bind(this));
+		this.shipBody.animations.getAnimation("fire_down").onComplete.add(this.gunFire.bind(this));
+		this.shipBody.animations.getAnimation("fire_left").onComplete.add(this.gunFire.bind(this));
+		this.shipBody.animations.getAnimation("fire_right").onComplete.add(this.gunFire.bind(this));
 		this.shipBody.animations.play('stand');
+		
 		this.shipBody.anchor.setTo(0.5,0.5);
 		this.add(this.shipBody);
 		this.state.physics.enable(this.shipBody, Phaser.Physics.ARCADE,true);
@@ -31,7 +43,7 @@ class HeroShip extends SpaceShip{
 		this.fireControl=this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 	}
 	animate(name:string){
-		if(this.shipBody.animations.currentAnim.name!=name)  this.shipBody.animations.play(name);
+		if(this.shipBody.animations.currentAnim.name!=name && this.shipBody.animations.currentAnim.name.indexOf("fire")===-1)  return this.shipBody.animations.play(name);
 	}
 
 	update(){
@@ -40,30 +52,40 @@ class HeroShip extends SpaceShip{
 		this.shipBody.body.velocity.y=0;
 
 		if (this.movementControls.left.isDown){
-			this.animate('left');
-			
+			this.currentMovement="left";
 	        this.shipBody.body.velocity.x=-this.speed;
 	    }else if(this.movementControls.right.isDown){
-	    	this.animate('right');
+	    	
+	    	this.currentMovement="right";
 	        this.shipBody.body.velocity.x=this.speed;
 	    }else if(this.movementControls.up.isDown){
-	    	this.animate('up');
+	    	
+	    	this.currentMovement="up";
 	        this.shipBody.body.velocity.y=-this.speed;
 	    }else if(this.movementControls.down.isDown){
-	    	this.animate('down');
+	    	
+	    	this.currentMovement="down";
 	        this.shipBody.body.velocity.y=this.speed;
 	    }else{
-	    	this.animate('stand');
+	    	this.currentMovement="stand";
+	    	
 	    }
-
+	    this.animate(this.currentMovement);
 	    if(this.fireControl.isDown){
-             this.fire();
+             this.fireAnimation();
         }
 
 	}
-
-	fire(){
-	 	this.gun.fire();
+	gunFire(){
+		this.gun.fire();
+		var cAnimation=this.shipBody.animations.getAnimation(this.currentMovement);
+		cAnimation.play();
+		cAnimation.stop(null,false);
+		cAnimation.frame=cAnimation.frameTotal-1;
+		
+	}
+	fireAnimation(){
+		this.animate('fire_'+this.currentMovement);
 	}
 	
 
