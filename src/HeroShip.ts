@@ -8,6 +8,7 @@ class HeroShip extends SpaceShip{
 	movementControls:KeyInput
 	fireControl:Phaser.Key
 	currentMovement:string="stand"
+	deltaTime:number=0;
 	constructor(state:PlayState){
 		super(state.game);
 
@@ -41,6 +42,7 @@ class HeroShip extends SpaceShip{
 
 		this.movementControls=this.game.input.keyboard.createCursorKeys();
 		this.fireControl=this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+		this.deltaTime=this.state.game.time.now;
 	}
 	animate(name:string){
 		if(this.shipBody.animations.currentAnim.name!=name && this.shipBody.animations.currentAnim.name.indexOf("fire")===-1)  return this.shipBody.animations.play(name);
@@ -72,7 +74,7 @@ class HeroShip extends SpaceShip{
 	    }
 	    this.animate(this.currentMovement);
 	    if(this.fireControl.isDown){
-             this.fireAnimation();
+             this.fire();
         }
 
 	}
@@ -84,8 +86,13 @@ class HeroShip extends SpaceShip{
 		cAnimation.frame=cAnimation.frameTotal-1;
 		
 	}
-	fireAnimation(){
-		this.animate('fire_'+this.currentMovement);
+	fire(){
+		if(this.state.game.time.now>this.deltaTime){
+
+			this.animate('fire_'+this.currentMovement);
+			this.deltaTime=this.state.game.time.now+this.gun.reloadTime;
+
+		}
 	}
 	
 

@@ -81,23 +81,18 @@ var HeroGun = (function (_super) {
         var _this = _super.call(this, ship.state.game) || this;
         _this.reloadTime = 500;
         _this.bulletSpeed = 500;
-        _this.deltaTime = 0;
         _this.offset = 0;
         _this.bulletDamage = 1;
         _this.state = ship.state;
         _this.ship = ship;
-        _this.deltaTime = _this.state.game.time.now;
         _this.bullets = new Phaser.Group(_this.state.game, ship.state.weaponsLayer, 'bulletGroup', false, true, Phaser.Physics.ARCADE);
         return _this;
     }
     HeroGun.prototype.fire = function () {
-        if (this.state.game.time.now > this.deltaTime) {
-            var bullet = this.bullets.getFirstExists(false);
-            bullet.reset(this.ship.getX(), this.ship.getY() - bullet.height + this.offset);
-            bullet.body.velocity.y = -this.bulletSpeed;
-            this.deltaTime = this.state.game.time.now + this.reloadTime;
-            this.sfx.play();
-        }
+        var bullet = this.bullets.getFirstExists(false);
+        bullet.reset(this.ship.getX(), this.ship.getY() - bullet.height + this.offset);
+        bullet.body.velocity.y = -this.bulletSpeed;
+        this.sfx.play();
     };
     return HeroGun;
 }(Phaser.Group));
@@ -106,10 +101,10 @@ var HeroGunLevel1 = (function (_super) {
     function HeroGunLevel1(ship) {
         var _this = _super.call(this, ship) || this;
         _this.bulletSpeed = 1000;
-        _this.reloadTime = 100;
-        _this.offset = 10;
+        _this.reloadTime = 300;
+        _this.offset = 0;
         _this.bulletDamage = 1;
-        _this.bullets.createMultiple(20, 'mainsprite', "laserBlue01.png");
+        _this.bullets.createMultiple(20, 'hero_fire_bullet');
         _this.bullets.setAll('anchor.x', 0.5);
         _this.bullets.setAll('anchor.y', 1);
         _this.bullets.setAll('outOfBoundsKill', true);
@@ -127,6 +122,7 @@ var HeroShip = (function (_super) {
         _this.life = 100;
         _this.speed = 300;
         _this.currentMovement = "stand";
+        _this.deltaTime = 0;
         _this.state = state;
         _this.shipBody = new Phaser.Sprite(state.game, 0, 0, "hero_ship_0");
         _this.shipBody.animations.add('stand', Phaser.Animation.generateFrameNames('hero_stand_', 0, 5, '.png', 4), 24, true);
@@ -152,6 +148,7 @@ var HeroShip = (function (_super) {
         _this.gun = new HeroGunLevel1(_this);
         _this.movementControls = _this.game.input.keyboard.createCursorKeys();
         _this.fireControl = _this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        _this.deltaTime = _this.state.game.time.now;
         return _this;
     }
     HeroShip.prototype.animate = function (name) {
@@ -183,7 +180,7 @@ var HeroShip = (function (_super) {
         }
         this.animate(this.currentMovement);
         if (this.fireControl.isDown) {
-            this.fireAnimation();
+            this.fire();
         }
     };
     HeroShip.prototype.gunFire = function () {
@@ -193,8 +190,11 @@ var HeroShip = (function (_super) {
         cAnimation.stop(null, false);
         cAnimation.frame = cAnimation.frameTotal - 1;
     };
-    HeroShip.prototype.fireAnimation = function () {
-        this.animate('fire_' + this.currentMovement);
+    HeroShip.prototype.fire = function () {
+        if (this.state.game.time.now > this.deltaTime) {
+            this.animate('fire_' + this.currentMovement);
+            this.deltaTime = this.state.game.time.now + this.gun.reloadTime;
+        }
     };
     return HeroShip;
 }(SpaceShip));
@@ -223,6 +223,7 @@ var Boot = (function (_super) {
         this.load.spritesheet('explosion', 'assets/img/explosion.png', 64, 64);
         this.load.atlasXML('mainsprite', 'assets/sprites/sheet.png', 'assets/sprites/sheet.xml');
         this.load.atlasJSONArray('hero_ship_0', 'assets/sprites/hero_ship_0.png', 'assets/sprites/hero_ship_0.json');
+        this.load.image('hero_fire_bullet', 'assets/img/hero_fire_bullet.png');
         this.load.audio('sfx_laser1', "assets/audio/sfx_laser1.ogg");
     };
     Boot.prototype.create = function () {
