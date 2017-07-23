@@ -117,14 +117,16 @@ class HeroShip extends SpaceShip{
         }
 	    
 	    this.animate(this.moveControls.getDescription());
-	    
-	    
-       
+	      
        
         this.shipBody.body.acceleration.x=this.acceleration.x;
         this.shipBody.body.acceleration.y=this.acceleration.y;
         
         
+	}
+	hitHandler(shipBody:Phaser.Sprite,bullet:Phaser.Sprite){
+		console.log("Collidion hero");
+		bullet.kill();
 	}
 	gunFire(){
 		

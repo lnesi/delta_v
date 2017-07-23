@@ -7,6 +7,7 @@ class Enemy extends SpaceShip{
 	accelaration:number;
 	maxSpeed:number;
 	fireTime:number;
+	on:boolean=false;
 	constructor(state:PlayState,sprite_id:string,maxSpeed:number=100,accelaration:number=50,fireTime:number=1000){
 		super(state.game);
 		this.fireTime=fireTime;
@@ -28,30 +29,41 @@ class Enemy extends SpaceShip{
 	}
 
 	init(){
-
+		this.on=true;
 	}
 	getSpeed():number{
 		return Math.sqrt(Math.pow(this.shipBody.body.velocity.x,2)+Math.pow(this.shipBody.body.velocity.x,2));
 	}
 	update(){
-		 var a = this.state.hero.getX()-this.getX();
-		 var b = this.state.hero.getY()-this.getY();
-		 var dx=this.accelaration*Math.sin(Math.atan2(a,b));
-		 var dy=this.accelaration*Math.cos(Math.atan2(a,b));
-		this.shipBody.body.velocity.y=dy/2;
-		this.shipBody.body.velocity.x=dx/2;
-		this.shipBody.body.rotation=Math.atan2(a,b)*(-180 / Math.PI); 
-		
-		if(this.life>0)
-		 	this.game.physics.arcade.overlap(this.shipBody, this.state.hero.weapon.bullets, this.collisionHandler, null, this);
-		if(this.state.game.time.now>this.deltaTime) this.fire();
+		if(this.on){
+			var a = this.state.hero.getX()-this.getX();
+			var b = this.state.hero.getY()-this.getY();
+			var dx=this.accelaration*Math.sin(Math.atan2(a,b));
+			var dy=this.accelaration*Math.cos(Math.atan2(a,b));
+			this.shipBody.body.velocity.y=dy/2;
+			this.shipBody.body.velocity.x=dx/2;
+			this.shipBody.body.rotation=Math.atan2(a,b)*(-180 / Math.PI); 
+			
+			if(this.life>0)
+			 	this.game.physics.arcade.overlap(this.shipBody, this.state.hero.weapon.bullets, this.hitHandler, null, this);
+
+			 this.game.physics.arcade.overlap(this.state.hero.shipBody,this.weapon.bullets,this.weaponHitHandler,null,this);
+			if(this.state.game.time.now>this.deltaTime) this.fire();
+			
+		}
 		super.update();
 	}
 	fire(){
 		this.deltaTime=this.state.game.time.now+this.fireTime;
 		this.weapon.fireAtSprite(this.state.hero.shipBody);
+		//this.weapon.sfx.play();
 	}
-	collisionHandler(enemy:Phaser.Sprite,bullet:Phaser.Sprite){
+	weaponHitHandler(heroBody:Phaser.Sprite,bullet:Phaser.Sprite){
+		console.log("HIT HERO")
+		bullet.kill();
+	}
+
+	hitHandler(enemy:Phaser.Sprite,bullet:Phaser.Sprite){
 		//this.life=0;
 		bullet.kill();
 		var explosion=new Phaser.Sprite(this.state.game,this.getX(),this.getY(),'explosion');
