@@ -18,8 +18,8 @@ class PlayState extends Phaser.State{
 		var background=new SpaceBackground(this);
 		
 		this.hero=new HeroShip(this);
-		this.hero.x=240;
-		this.hero.y=500;
+		this.hero.x=Game.globalWidth/2;
+		this.hero.y=Game.globalHeight/2;
 		this.heroLayer.add(this.hero);
 
 		this.enemy=new Enemy02(this);
