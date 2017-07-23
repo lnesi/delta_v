@@ -6,15 +6,15 @@ class HeroShip extends SpaceShip{
 	friction:number=500;
 	maxAcceleration:number=500;
 	maxSpeed=200;
-	gun:HeroGun
+
 	moveControls:PadControls
 	fireControl:Phaser.Key
 	currentMovement:string="stand"
-	deltaTime:number=0;
+	
 	weightEnergy:number=10;
 	direction:Phaser.Point=new Phaser.Point(0,0);
 	acceleration:Phaser.Point= new Phaser.Point(0,0);
-
+	
 	constructor(state:PlayState){
 		super(state.game);
 
@@ -41,14 +41,23 @@ class HeroShip extends SpaceShip{
 		
 		this.shipBody.anchor.setTo(0.5,0.5);
 		this.add(this.shipBody);
+		
 		this.state.physics.enable(this.shipBody, Phaser.Physics.ARCADE,true);
 		this.shipBody.body.collideWorldBounds = true;
-
-		this.gun=new HeroGunLevel1(this);
+		this.shipBody.body.syncBounds=true;
+		this.shipBody.body.setCircle(this.shipBody.height/2.8, 0, 0)
+		
+		this.weapon=new HeroGunLevel1(this);
 
 		this.moveControls=new PadControls(state.game);
 		this.fireControl=this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 		this.deltaTime=this.state.game.time.now;
+
+		
+		
+	
+
+
 	}
 	animate(name:string){
 		if(this.shipBody.animations.currentAnim.name!=name && this.shipBody.animations.currentAnim.name.indexOf("fire")===-1)  return this.shipBody.animations.play(name);
@@ -67,7 +76,7 @@ class HeroShip extends SpaceShip{
 
 		this.shipBody.body.acceleration.y=0;
 		
-
+		
 		this.moveControls.update();
 	
      	
@@ -118,7 +127,8 @@ class HeroShip extends SpaceShip{
         
 	}
 	gunFire(){
-		this.gun.fire();
+		
+		this.weapon.fireWeapon();
 		var cAnimation=this.shipBody.animations.getAnimation(this.moveControls.getDescription());
 		cAnimation.play();
 		cAnimation.stop(null,false);
@@ -129,7 +139,7 @@ class HeroShip extends SpaceShip{
 		if(this.state.game.time.now>this.deltaTime){
 
 			this.animate('fire_'+this.moveControls.getDescription());
-			this.deltaTime=this.state.game.time.now+this.gun.reloadTime;
+			this.deltaTime=this.state.game.time.now+this.weapon.fireRate;
 
 		}
 	}

@@ -1,9 +1,9 @@
 
 class Game extends Phaser.Game{
-	static globalWidth:number=480;
-	static globalHeight:number=640;
+	static globalWidth:number=window.innerWidth;
+	static globalHeight:number=window.innerHeight;
 	constructor(){
-		super(480,640, Phaser.CANVAS);
+		super(Game.globalWidth,Game.globalHeight, Phaser.CANVAS);
 		this.state.add('Boot',Boot,false);
 		this.state.add('PlayState',PlayState,false);
 		
