@@ -142,7 +142,7 @@ var Weapon = (function (_super) {
         }
         _this.ship = ship;
         if (group) {
-            _this.createBullets(20, textureID, group);
+            _this.createBullets(20, textureID, 0, group);
         }
         else {
             _this.createBullets(20, textureID);
@@ -301,24 +301,41 @@ var SpaceBackground = (function (_super) {
     };
     return SpaceBackground;
 }(Phaser.TileSprite));
+var LoadableState = (function (_super) {
+    __extends(LoadableState, _super);
+    function LoadableState() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.ready = false;
+        return _this;
+    }
+    LoadableState.prototype.init = function () {
+        console.log("UBUT Main");
+        this.preloaderLayer = new Phaser.Group(this.game);
+        this.preloadBackground = new Phaser.TileSprite(this.game, 0, 0, Game.globalWidth, Game.globalHeight, 'preload_back');
+        this.preloadBar = new Phaser.Sprite(this.game, (Game.globalWidth / 2) - 150, (Game.globalHeight / 2) - 12, 'preload_bar');
+    };
+    LoadableState.prototype.preload = function () {
+        this.preloaderLayer.add(this.preloadBackground);
+        this.preloaderLayer.add(this.preloadBar);
+        this.load.setPreloadSprite(this.preloadBar);
+    };
+    return LoadableState;
+}(Phaser.State));
 var Boot = (function (_super) {
     __extends(Boot, _super);
     function Boot() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    Boot.prototype.init = function () {
+        this.physics.startSystem(Phaser.Physics.ARCADE);
+        //this.scale.scaleMode=Phaser.ScaleManager.SHOW_ALL
+    };
     Boot.prototype.preload = function () {
         console.log("Boot: Preload");
-        //this.scale.scaleMode=Phaser.ScaleManager.SHOW_ALL
-        this.physics.startSystem(Phaser.Physics.ARCADE);
-        this.load.image('BackgroundDarkPurple', 'assets/img/darkPurple.png');
-        this.load.spritesheet('explosion', 'assets/img/explosion.png', 64, 64);
-        this.load.atlasXML('mainsprite', 'assets/sprites/sheet.png', 'assets/sprites/sheet.xml');
-        this.load.atlasJSONArray('hero_ship_0', 'assets/sprites/hero_ship_0.png', 'assets/sprites/hero_ship_0.json');
-        this.load.atlasJSONArray('enemy_01', 'assets/sprites/enemy_01.png', 'assets/sprites/enemy_01.json');
-        this.load.atlasJSONArray('enemy_02', 'assets/sprites/enemy_02.png', 'assets/sprites/enemy_02.json');
-        this.load.image('enemy_fire_bullet', 'assets/img/enemy_fire_bullet.png');
-        this.load.image('hero_fire_bullet', 'assets/img/hero_fire_bullet.png');
-        this.load.audio('sfx_laser1', "assets/audio/sfx_laser1.ogg");
+        this.load.image('preload_back', 'assets/img/darkPurple.png');
+        this.load.image('preload_bar', 'assets/img/preload_bar.png');
+        // Phaser will automatically pause if the browser tab the game is in loses focus. You can disable that here:
+        // 
     };
     Boot.prototype.create = function () {
         console.log("Boot: Created");
@@ -333,6 +350,18 @@ var PlayState = (function (_super) {
     function PlayState() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    PlayState.prototype.preload = function () {
+        _super.prototype.preload.call(this);
+        this.load.image('BackgroundDarkPurple', 'assets/img/darkPurple.png');
+        this.load.atlasXML('mainsprite', 'assets/sprites/sheet.png', 'assets/sprites/sheet.xml');
+        this.load.spritesheet('explosion', 'assets/img/explosion.png', 64, 64);
+        this.load.atlasJSONArray('hero_ship_0', 'assets/sprites/hero_ship_0.png', 'assets/sprites/hero_ship_0.json');
+        this.load.atlasJSONArray('enemy_01', 'assets/sprites/enemy_01.png', 'assets/sprites/enemy_01.json');
+        this.load.atlasJSONArray('enemy_02', 'assets/sprites/enemy_02.png', 'assets/sprites/enemy_02.json');
+        this.load.image('enemy_fire_bullet', 'assets/img/enemy_fire_bullet.png');
+        this.load.image('hero_fire_bullet', 'assets/img/hero_fire_bullet.png');
+        this.load.audio('sfx_laser1', "assets/audio/sfx_laser1.ogg");
+    };
     PlayState.prototype.create = function () {
         this.backgroundLayer = new Phaser.Group(this.game);
         this.weaponsLayer = new Phaser.Group(this.game);
@@ -370,7 +399,7 @@ var PlayState = (function (_super) {
         //this.game.debug.bodyInfo(this.hero.shipBody,10,10);
     };
     return PlayState;
-}(Phaser.State));
+}(LoadableState));
 var KeyInput = (function () {
     function KeyInput() {
     }

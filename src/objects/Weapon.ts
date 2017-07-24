@@ -12,7 +12,7 @@ class Weapon extends Phaser.Weapon{
 		this.ship=ship;
 		if(group){
 			
-			this.createBullets(20,textureID,group);
+			this.createBullets(20,textureID,0,group);
 		}else{
 			this.createBullets(20,textureID);
 		}
