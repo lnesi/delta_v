@@ -5,8 +5,10 @@ class PlayState extends LoadableState{
 	enemyLayer:Phaser.Group
 	heroLayer:Phaser.Group
 	foregroundLayer:Phaser.Group
-	enemy:Enemy
+	enemy1:Enemy
+	enemy2:Enemy
 	background:Phaser.TileSprite;
+	bodys:any
 	preload(){
 		super.preload();
 		this.load.image('BackgroundDarkPurple','assets/img/darkPurple.png');
@@ -27,25 +29,35 @@ class PlayState extends LoadableState{
 		this.foregroundLayer=new Phaser.Group(this.game);
 
 		var background=new SpaceBackground(this);
-		
+		this.bodys=this.game.add.physicsGroup(Phaser.Physics.ARCADE);
+		this.bodys.x=0;
+		this.bodys.y=0;
+		this.bodys.width=Game.globalWidth;
+		this.bodys.height=Game.globalHeight;
+		console.log(this.bodys);
 		this.hero=new HeroShip(this);
 		this.hero.x=Game.globalWidth/2;
 		this.hero.y=Game.globalHeight/2;
 		this.heroLayer.add(this.hero);
 
-		this.enemy=new Enemy02(this);
-		this.enemyLayer.addChild(this.enemy);
-		this.enemy.x=0;
-		this.enemy.y=0;
-		this.enemy.init();
-
-		for(var i:number=0;i<10;i++){
-			var e=new Enemy01(this);
-			this.enemyLayer.addChild(e);
-			e.x=(Math.random()*Game.globalWidth*2)-Game.globalWidth;
-			e.y=-50-(Math.random()*500);
-			e.init();
-		}
+		this.enemy1=new Enemy02(this,0,5000,5000);
+		this.enemyLayer.addChild(this.enemy1);
+		this.enemy1.init(100,100);
+		
+		//this.bodys.add(this.enemy1.shipBody);
+		
+		this.enemy2=new Enemy01(this,1);
+		this.enemyLayer.addChild(this.enemy2);
+	
+		this.enemy2.init(500,0);
+		//this.bodys.add(this.enemy2.shipBody);
+		// for(var i:number=0;i<10;i++){
+		// 	var e=new Enemy01(this);
+		// 	this.enemyLayer.addChild(e);
+		// 	e.x=(Math.random()*Game.globalWidth*2)-Game.globalWidth;
+		// 	e.y=-50-(Math.random()*500);
+		// 	e.init();
+		// }
 		
 
 	}
@@ -55,6 +67,7 @@ class PlayState extends LoadableState{
 	}
 	update(){
 		
+		//this.game.physics.arcade.collide(this.bodys);
 	
 		
 		
@@ -66,7 +79,9 @@ class PlayState extends LoadableState{
 
 	render(){
 		//this.game.debug.body(this.hero.shipBody);
-		this.game.debug.body(this.enemy.shipBody);
+		//this.game.debug.body(this.enemy1.shipBody);
+		//this.game.debug.body(this.enemy2.shipBody);
+		
 		//this.game.debug.bodyInfo(this.hero.shipBody,10,10);
 	}
 }
