@@ -1,8 +1,9 @@
 class Weapon extends Phaser.Weapon{
-	ship:SpaceShip
-	sfx:Phaser.Sound
-	emiterOffset:Phaser.Point
-	constructor(ship:SpaceShip,textureID:string,soundID:string,offset:Phaser.Point=null,group:Phaser.Group=null){
+	public ship:SpaceShip
+	public sfx:Phaser.Sound
+	public emiterOffset:Phaser.Point
+	public damage:number
+	constructor(ship:SpaceShip,textureID:string,soundID:string,fireRate:number=null,damage:number=1,offset:Phaser.Point=null,group:Phaser.Group=null){
 		super(ship.state.game,ship.state.game.plugins);
 		if(offset){
 			this.emiterOffset=offset;
@@ -21,6 +22,11 @@ class Weapon extends Phaser.Weapon{
   	  	this.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
 		//  Because our bullet is drawn facing up, we need to offset its rotation:
    		this.bulletAngleOffset = 90;
+   		if(fireRate===null){
+   			this.fireRate=Phaser.Math.between(10,100);
+   		}else{
+   			this.fireRate=fireRate;
+   		}
    		
     	//  The speed at which the bullet is fired
     	this.bulletSpeed = 750;

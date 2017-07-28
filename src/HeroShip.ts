@@ -1,19 +1,19 @@
 ///<reference path="objects/SpaceShip.ts"/>
 
 class HeroShip extends SpaceShip{
-	state: PlayState
-	life:number=100
-	friction:number=750;
-	maxAcceleration:number=750;
-	maxSpeed:number=500;
+	public state: PlayState
+	public life:number=100
+	public friction:number=750;
+	public maxAcceleration:number=750;
+	public maxSpeed:number=500;
 
-	moveControls:PadControls
-	fireControl:Phaser.Key
-	currentMovement:string="stand"
+	public moveControls:PadControls
+	public fireControl:Phaser.Key
+	public currentMovement:string="stand"
 	
-	weightEnergy:number=10;
-	direction:Phaser.Point=new Phaser.Point(0,0);
-	acceleration:Phaser.Point= new Phaser.Point(0,0);
+	public weightEnergy:number=10;
+	public direction:Phaser.Point=new Phaser.Point(0,0);
+	public acceleration:Phaser.Point= new Phaser.Point(0,0);
 	
 	constructor(state:PlayState){
 		super(state.game);
@@ -62,9 +62,7 @@ class HeroShip extends SpaceShip{
 	animate(name:string){
 		if(this.shipBody.animations.currentAnim.name!=name && this.shipBody.animations.currentAnim.name.indexOf("fire")===-1)  return this.shipBody.animations.play(name);
 	}
-	getSpeed():number{
-		return Math.sqrt(Math.pow(this.shipBody.body.velocity.x,2)+Math.pow(this.shipBody.body.velocity.x,2));
-	}
+	
 	getCurrentDirection():Phaser.Point{
 		var x=0;
 		var y=0;
@@ -72,6 +70,7 @@ class HeroShip extends SpaceShip{
 		if(Math.abs(this.shipBody.body.velocity.y)>0)y=(this.shipBody.body.velocity.y/Math.abs(this.shipBody.body.velocity.y));
 		return new Phaser.Point(x,y)
 	}
+
 	update(){
 
 		this.shipBody.body.acceleration.y=0;
@@ -138,12 +137,12 @@ class HeroShip extends SpaceShip{
 		
 	}
 	fire(){
-		if(this.state.game.time.now>this.deltaTime){
 
-			this.animate('fire_'+this.moveControls.getDescription());
-			this.deltaTime=this.state.game.time.now+this.weapon.fireRate;
+		//if(this.state.game.time.now>this.deltaTime){
+		this.animate('fire_'+this.moveControls.getDescription());
+		//	this.deltaTime=this.state.game.time.now+this.weapon.fireRate;
 
-		}
+		//}
 	}
 	
 
