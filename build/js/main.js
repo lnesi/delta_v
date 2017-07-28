@@ -428,12 +428,11 @@ var PlayState = (function (_super) {
     };
     PlayState.prototype.update = function () {
         this.clock++;
-        console.log(this.clock);
         if ((this.clock % 150) == 0) {
             console.log("SPAWN");
-            var enemy = new Enemy02(this, 0, 5000, 5000);
+            var enemy = new Enemy02(this, 0, Game.globalWidth / 2, Game.globalHeight * 2);
             this.enemyLayer.addChild(enemy);
-            enemy.init(-100, -100);
+            enemy.init(Phaser.Math.between(100, Game.globalWidth - 100), -100);
         }
         //this.game.physics.arcade.collide(this.bodys);
     };
