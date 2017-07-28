@@ -429,9 +429,14 @@ var PlayState = (function (_super) {
     };
     PlayState.prototype.update = function () {
         this.clock++;
-        if ((this.clock % 150) == 0) {
+        if ((this.clock % 200) == 0) {
             console.log("SPAWN");
             var enemy = new Enemy02(this, 0, Game.globalWidth / 2, Game.globalHeight * 2);
+            this.enemyLayer.addChild(enemy);
+            enemy.init(Phaser.Math.between(100, Game.globalWidth - 100), -100);
+        }
+        if ((this.clock % 500) == 0) {
+            var enemy = new Enemy01(this, 1);
             this.enemyLayer.addChild(enemy);
             enemy.init(Phaser.Math.between(100, Game.globalWidth - 100), -100);
         }

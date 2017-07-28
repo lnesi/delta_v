@@ -60,13 +60,18 @@ class PlayState extends LoadableState{
 	update(){
 		this.clock++;
 		
-		if((this.clock%150)==0){
-			console.log("SPAWN");
+		if((this.clock%200)==0){
+			console.log("SPAWN Enemy02");
 			var enemy=new Enemy02(this,0,Game.globalWidth/2,Game.globalHeight*2);
 			this.enemyLayer.addChild(enemy);
 			enemy.init(Phaser.Math.between(100,Game.globalWidth-100),-100);
 		}
-		
+		if((this.clock%500)==0){
+			console.log("SPAWN Enemy01");
+			var enemy=new Enemy01(this,1);
+			this.enemyLayer.addChild(enemy);
+			enemy.init(Phaser.Math.between(100,Game.globalWidth-100),-100);
+		}
 		//this.game.physics.arcade.collide(this.bodys);
 	
 		
