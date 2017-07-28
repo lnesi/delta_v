@@ -1,6 +1,6 @@
-///<reference path="EnemySweep.ts"/>
+///<reference path="EnemySwap.ts"/>
 
-class Enemy03 extends EnemySweep{
+class Enemy04 extends EnemySwap{
 	
 	constructor(state:PlayState,index:number){
 		super(state,index,"enemy_03",100,400);

@@ -1,5 +1,6 @@
-///<reference path="../objects/SpaceShip"/>
-class Enemy extends SpaceShip{
+///<reference path="../objects/SpaceShip.ts"/>
+
+class EnemyBase extends SpaceShip{
 	public offsetWidth:number=100;
 	public offsetHeight:number=100;
 	public state:PlayState
@@ -12,7 +13,7 @@ class Enemy extends SpaceShip{
 	public fireTime:number;
 	public on:boolean=false;
 	public target:Phaser.Point=new Phaser.Point(0,0);
-
+	public clock:number=0
 	constructor(state:PlayState,index:number,sprite_id:string,maxSpeed:number=100,accelaration:number=50,fireTime:number=1000){
 		super(state.game);
 		this.state=state;
@@ -50,6 +51,7 @@ class Enemy extends SpaceShip{
 	}
 	update(){
 		if(this.on){
+			this.clock++;
 			var aHero=this.state.hero.getX()-this.getX();
 			var bHero=this.state.hero.getY()-this.getY();
 			var a = this.target.x-this.getX();
@@ -65,7 +67,6 @@ class Enemy extends SpaceShip{
 
 			 this.game.physics.arcade.overlap(this.state.hero.shipBody,this.weapon.bullets,this.weaponHitHandler,null,this);
 			if(this.state.game.time.now>this.deltaTime) this.fire();
-
 			
 		}
 		super.update();

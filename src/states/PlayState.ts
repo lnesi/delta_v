@@ -5,7 +5,7 @@ class PlayState extends LoadableState{
 	enemyLayer:Phaser.Group
 	heroLayer:Phaser.Group
 	foregroundLayer:Phaser.Group
-	enemy:Enemy
+	enemy:EnemyBase
 	background:Phaser.TileSprite;
 	bodys:any
 	initTime:number
@@ -61,6 +61,14 @@ class PlayState extends LoadableState{
 	update(){
 		this.clock++;
 		
+		
+		//this.game.physics.arcade.collide(this.bodys);
+	
+		this.spawner();
+		
+	}
+
+	spawner(){
 		if((this.clock%200)==0){
 			this.indexCount++;
 			console.log("SPAWN Enemy02");
@@ -77,6 +85,14 @@ class PlayState extends LoadableState{
 			enemy.init();
 		}
 
+		if((this.clock%=400)==0){
+			this.indexCount++;
+			console.log("SPAWN Enemy04");
+			let enemy=new Enemy04(this,this.indexCount);
+			this.enemyLayer.addChild(enemy);
+			enemy.init();
+		}
+
 		if((this.clock%500)==0){
 			this.indexCount++
 			console.log("SPAWN Enemy01");
@@ -84,10 +100,6 @@ class PlayState extends LoadableState{
 			this.enemyLayer.addChild(enemy);
 			enemy.init();
 		}
-		//this.game.physics.arcade.collide(this.bodys);
-	
-		
-		
 	}
 
 	collisionHandler(){

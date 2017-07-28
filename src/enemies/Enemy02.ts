@@ -1,4 +1,5 @@
-class Enemy02 extends Enemy{
+///<reference path="EnemyBase.ts"/>
+class Enemy02 extends EnemyBase{
 	
 	
 	constructor(state:PlayState,index:number){

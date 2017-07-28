@@ -220,10 +220,10 @@ var SpaceBackground = (function (_super) {
     };
     return SpaceBackground;
 }(Phaser.TileSprite));
-///<reference path="../objects/SpaceShip"/>
-var Enemy = (function (_super) {
-    __extends(Enemy, _super);
-    function Enemy(state, index, sprite_id, maxSpeed, accelaration, fireTime) {
+///<reference path="../objects/SpaceShip.ts"/>
+var EnemyBase = (function (_super) {
+    __extends(EnemyBase, _super);
+    function EnemyBase(state, index, sprite_id, maxSpeed, accelaration, fireTime) {
         if (maxSpeed === void 0) { maxSpeed = 100; }
         if (accelaration === void 0) { accelaration = 50; }
         if (fireTime === void 0) { fireTime = 1000; }
@@ -233,6 +233,7 @@ var Enemy = (function (_super) {
         _this.life = 1;
         _this.on = false;
         _this.target = new Phaser.Point(0, 0);
+        _this.clock = 0;
         _this.state = state;
         _this.index = index;
         _this.fireTime = fireTime;
@@ -249,17 +250,18 @@ var Enemy = (function (_super) {
         return _this;
         //this.shipBody.body.collideWorldBounds=true;
     }
-    Enemy.prototype.init = function () {
+    EnemyBase.prototype.init = function () {
         this.setX(Phaser.Math.between(this.offsetWidth, Game.globalWidth - this.offsetWidth));
         this.setY(-this.offsetHeight);
         this.deltaTime = this.state.game.time.now + this.fireTime;
         this.on = true;
     };
-    Enemy.prototype.getSpeed = function () {
+    EnemyBase.prototype.getSpeed = function () {
         return Math.sqrt(Math.pow(this.shipBody.body.velocity.x, 2) + Math.pow(this.shipBody.body.velocity.x, 2));
     };
-    Enemy.prototype.update = function () {
+    EnemyBase.prototype.update = function () {
         if (this.on) {
+            this.clock++;
             var aHero = this.state.hero.getX() - this.getX();
             var bHero = this.state.hero.getY() - this.getY();
             var a = this.target.x - this.getX();
@@ -277,16 +279,16 @@ var Enemy = (function (_super) {
         }
         _super.prototype.update.call(this);
     };
-    Enemy.prototype.fire = function () {
+    EnemyBase.prototype.fire = function () {
         this.deltaTime = this.state.game.time.now + this.fireTime;
         this.weapon.fireAtSprite(this.state.hero.shipBody);
         //this.weapon.sfx.play();
     };
-    Enemy.prototype.weaponHitHandler = function (heroBody, bullet) {
+    EnemyBase.prototype.weaponHitHandler = function (heroBody, bullet) {
         console.log("HIT HERO");
         bullet.kill();
     };
-    Enemy.prototype.hitHandler = function (enemy, bullet) {
+    EnemyBase.prototype.hitHandler = function (enemy, bullet) {
         //this.life=0;
         bullet.kill();
         var explosion = new Phaser.Sprite(this.state.game, this.getX(), this.getY(), 'explosion');
@@ -298,8 +300,9 @@ var Enemy = (function (_super) {
         this.toDestroy = true;
         console.log("COLLISION bullet");
     };
-    return Enemy;
+    return EnemyBase;
 }(SpaceShip));
+///<reference path="EnemyBase.ts"/>
 var EnemyKamikaze = (function (_super) {
     __extends(EnemyKamikaze, _super);
     function EnemyKamikaze() {
@@ -310,7 +313,7 @@ var EnemyKamikaze = (function (_super) {
         _super.prototype.update.call(this);
     };
     return EnemyKamikaze;
-}(Enemy));
+}(EnemyBase));
 ///<reference path="EnemyKamikaze"/>
 var Enemy01 = (function (_super) {
     __extends(Enemy01, _super);
@@ -324,6 +327,7 @@ var Enemy01 = (function (_super) {
     }
     return Enemy01;
 }(EnemyKamikaze));
+///<reference path="EnemyBase.ts"/>
 var Enemy02 = (function (_super) {
     __extends(Enemy02, _super);
     function Enemy02(state, index) {
@@ -333,7 +337,8 @@ var Enemy02 = (function (_super) {
         return _this;
     }
     return Enemy02;
-}(Enemy));
+}(EnemyBase));
+///<reference path="EnemyBase.ts"/>
 var EnemySweep = (function (_super) {
     __extends(EnemySweep, _super);
     function EnemySweep() {
@@ -347,18 +352,55 @@ var EnemySweep = (function (_super) {
         _super.prototype.update.call(this);
     };
     return EnemySweep;
-}(Enemy));
-///<reference path="EnemySweep"/>
+}(EnemyBase));
+///<reference path="EnemySweep.ts"/>
 var Enemy03 = (function (_super) {
     __extends(Enemy03, _super);
     function Enemy03(state, index) {
         var _this = _super.call(this, state, index, "enemy_03", 100, 400) || this;
-        _this.target = new Phaser.Point(0, Game.globalHeight + _this.offsetHeight);
+        _this.target = new Phaser.Point(0, Game.globalHeight * 1.2);
         _this.weapon = new Weapon(_this, 'enemy_fire_bullet', 'sfx_laser1', new Phaser.Point(0, 0), state.weaponsLayer);
         return _this;
     }
     return Enemy03;
 }(EnemySweep));
+///<reference path="EnemyBase.ts"/>
+var EnemySwap = (function (_super) {
+    __extends(EnemySwap, _super);
+    function EnemySwap() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.spawnChange = 100;
+        _this.xTarget = 0;
+        return _this;
+    }
+    EnemySwap.prototype.update = function () {
+        if (this.clock % this.spawnChange == 0) {
+            console.log("swap1", this.xTarget);
+            if (this.xTarget == 0) {
+                this.xTarget = Game.globalWidth;
+            }
+            else {
+                this.xTarget = 0;
+            }
+            console.log("swap2", this.xTarget);
+        }
+        console.log(this.xTarget);
+        this.target = new Phaser.Point(this.xTarget, this.target.y);
+        _super.prototype.update.call(this);
+    };
+    return EnemySwap;
+}(EnemyBase));
+///<reference path="EnemySwap.ts"/>
+var Enemy04 = (function (_super) {
+    __extends(Enemy04, _super);
+    function Enemy04(state, index) {
+        var _this = _super.call(this, state, index, "enemy_03", 100, 400) || this;
+        _this.target = new Phaser.Point(0, Game.globalHeight * 1.2);
+        _this.weapon = new Weapon(_this, 'enemy_fire_bullet', 'sfx_laser1', new Phaser.Point(0, 0), state.weaponsLayer);
+        return _this;
+    }
+    return Enemy04;
+}(EnemySwap));
 var LoadableState = (function (_super) {
     __extends(LoadableState, _super);
     function LoadableState() {
@@ -453,6 +495,10 @@ var PlayState = (function (_super) {
     };
     PlayState.prototype.update = function () {
         this.clock++;
+        //this.game.physics.arcade.collide(this.bodys);
+        this.spawner();
+    };
+    PlayState.prototype.spawner = function () {
         if ((this.clock % 200) == 0) {
             this.indexCount++;
             console.log("SPAWN Enemy02");
@@ -467,6 +513,13 @@ var PlayState = (function (_super) {
             this.enemyLayer.addChild(enemy);
             enemy.init();
         }
+        if ((this.clock %= 400) == 0) {
+            this.indexCount++;
+            console.log("SPAWN Enemy04");
+            var enemy = new Enemy04(this, this.indexCount);
+            this.enemyLayer.addChild(enemy);
+            enemy.init();
+        }
         if ((this.clock % 500) == 0) {
             this.indexCount++;
             console.log("SPAWN Enemy01");
@@ -474,7 +527,6 @@ var PlayState = (function (_super) {
             this.enemyLayer.addChild(enemy);
             enemy.init();
         }
-        //this.game.physics.arcade.collide(this.bodys);
     };
     PlayState.prototype.collisionHandler = function () {
         console.log("COLLISION");
