@@ -343,7 +343,7 @@ var EnemySweep = (function (_super) {
     }
     EnemySweep.prototype.update = function () {
         this.xTracker = this.xTracker + 0.01;
-        this.target = new Phaser.Point(Math.sin(this.xTracker) * 10000, this.target.y);
+        this.target = new Phaser.Point(Math.sin(this.xTracker) * Game.globalWidth, this.target.y);
         _super.prototype.update.call(this);
     };
     return EnemySweep;
@@ -352,7 +352,7 @@ var EnemySweep = (function (_super) {
 var Enemy03 = (function (_super) {
     __extends(Enemy03, _super);
     function Enemy03(state, index) {
-        var _this = _super.call(this, state, index, "enemy_03", 100, 200) || this;
+        var _this = _super.call(this, state, index, "enemy_03", 100, 400) || this;
         _this.target = new Phaser.Point(0, Game.globalHeight + _this.offsetHeight);
         _this.weapon = new Weapon(_this, 'enemy_fire_bullet', 'sfx_laser1', new Phaser.Point(0, 0), state.weaponsLayer);
         return _this;
