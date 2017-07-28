@@ -9,6 +9,8 @@ class PlayState extends LoadableState{
 	enemy2:Enemy
 	background:Phaser.TileSprite;
 	bodys:any
+	initTime:number
+	clock:number=0
 	preload(){
 		super.preload();
 		this.load.image('BackgroundDarkPurple','assets/img/darkPurple.png');
@@ -39,33 +41,31 @@ class PlayState extends LoadableState{
 		this.hero.x=Game.globalWidth/2;
 		this.hero.y=Game.globalHeight/2;
 		this.heroLayer.add(this.hero);
+		this.initTime=this.game.time.now;
+		
+		// this.enemy1=new Enemy02(this,0,5000,5000);
+		// this.enemyLayer.addChild(this.enemy1);
+		// this.enemy1.init(100,100);
 
-		this.enemy1=new Enemy02(this,0,5000,5000);
-		this.enemyLayer.addChild(this.enemy1);
-		this.enemy1.init(100,100);
-		
-		//this.bodys.add(this.enemy1.shipBody);
-		
-		this.enemy2=new Enemy01(this,1);
-		this.enemyLayer.addChild(this.enemy2);
-	
-		this.enemy2.init(500,0);
-		//this.bodys.add(this.enemy2.shipBody);
-		// for(var i:number=0;i<10;i++){
-		// 	var e=new Enemy01(this);
-		// 	this.enemyLayer.addChild(e);
-		// 	e.x=(Math.random()*Game.globalWidth*2)-Game.globalWidth;
-		// 	e.y=-50-(Math.random()*500);
-		// 	e.init();
-		// }
-		
 
+	}
+	getTime(){
+		this.clock++
+		return this.game.time.now-this.initTime;
 	}
 	setupControls(){
 		
 		
 	}
 	update(){
+		this.clock++;
+		console.log(this.clock);
+		if((this.clock%150)==0){
+			console.log("SPAWN");
+			var enemy=new Enemy02(this,0,5000,5000);
+			this.enemyLayer.addChild(enemy);
+			enemy.init(-100,-100);
+		}
 		
 		//this.game.physics.arcade.collide(this.bodys);
 	

@@ -23,7 +23,7 @@ class Weapon extends Phaser.Weapon{
    		this.bulletAngleOffset = 90;
    		
     	//  The speed at which the bullet is fired
-    	this.bulletSpeed = 500;
+    	this.bulletSpeed = 750;
 		//this.bullets = new Phaser.Group(this.state.game,ship.state.weaponsLayer,'bulletGroup',false,true,Phaser.Physics.ARCADE);
 		this.sfx=new Phaser.Sound(ship.state.game,soundID,0.5);
 

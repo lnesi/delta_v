@@ -3,9 +3,9 @@
 class HeroShip extends SpaceShip{
 	state: PlayState
 	life:number=100
-	friction:number=500;
-	maxAcceleration:number=500;
-	maxSpeed=200;
+	friction:number=750;
+	maxAcceleration:number=750;
+	maxSpeed:number=500;
 
 	moveControls:PadControls
 	fireControl:Phaser.Key
@@ -118,7 +118,7 @@ class HeroShip extends SpaceShip{
 	    
 	    this.animate(this.moveControls.getDescription());
 	      
-       
+        
         this.shipBody.body.acceleration.x=this.acceleration.x;
         this.shipBody.body.acceleration.y=this.acceleration.y;
         

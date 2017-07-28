@@ -45,7 +45,7 @@ var Weapon = (function (_super) {
         //  Because our bullet is drawn facing up, we need to offset its rotation:
         _this.bulletAngleOffset = 90;
         //  The speed at which the bullet is fired
-        _this.bulletSpeed = 500;
+        _this.bulletSpeed = 750;
         //this.bullets = new Phaser.Group(this.state.game,ship.state.weaponsLayer,'bulletGroup',false,true,Phaser.Physics.ARCADE);
         _this.sfx = new Phaser.Sound(ship.state.game, soundID, 0.5);
         _this.trackSprite(ship.shipBody, _this.emiterOffset.x, _this.emiterOffset.y);
@@ -100,9 +100,9 @@ var HeroShip = (function (_super) {
     function HeroShip(state) {
         var _this = _super.call(this, state.game) || this;
         _this.life = 100;
-        _this.friction = 500;
-        _this.maxAcceleration = 500;
-        _this.maxSpeed = 200;
+        _this.friction = 750;
+        _this.maxAcceleration = 750;
+        _this.maxSpeed = 500;
         _this.currentMovement = "stand";
         _this.weightEnergy = 10;
         _this.direction = new Phaser.Point(0, 0);
@@ -382,7 +382,9 @@ var Boot = (function (_super) {
 var PlayState = (function (_super) {
     __extends(PlayState, _super);
     function PlayState() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.clock = 0;
+        return _this;
     }
     PlayState.prototype.preload = function () {
         _super.prototype.preload.call(this);
@@ -413,25 +415,26 @@ var PlayState = (function (_super) {
         this.hero.x = Game.globalWidth / 2;
         this.hero.y = Game.globalHeight / 2;
         this.heroLayer.add(this.hero);
-        this.enemy1 = new Enemy02(this, 0, 5000, 5000);
-        this.enemyLayer.addChild(this.enemy1);
-        this.enemy1.init(100, 100);
-        //this.bodys.add(this.enemy1.shipBody);
-        this.enemy2 = new Enemy01(this, 1);
-        this.enemyLayer.addChild(this.enemy2);
-        this.enemy2.init(500, 0);
-        //this.bodys.add(this.enemy2.shipBody);
-        // for(var i:number=0;i<10;i++){
-        // 	var e=new Enemy01(this);
-        // 	this.enemyLayer.addChild(e);
-        // 	e.x=(Math.random()*Game.globalWidth*2)-Game.globalWidth;
-        // 	e.y=-50-(Math.random()*500);
-        // 	e.init();
-        // }
+        this.initTime = this.game.time.now;
+        // this.enemy1=new Enemy02(this,0,5000,5000);
+        // this.enemyLayer.addChild(this.enemy1);
+        // this.enemy1.init(100,100);
+    };
+    PlayState.prototype.getTime = function () {
+        this.clock++;
+        return this.game.time.now - this.initTime;
     };
     PlayState.prototype.setupControls = function () {
     };
     PlayState.prototype.update = function () {
+        this.clock++;
+        console.log(this.clock);
+        if ((this.clock % 150) == 0) {
+            console.log("SPAWN");
+            var enemy = new Enemy02(this, 0, 5000, 5000);
+            this.enemyLayer.addChild(enemy);
+            enemy.init(-100, -100);
+        }
         //this.game.physics.arcade.collide(this.bodys);
     };
     PlayState.prototype.collisionHandler = function () {
