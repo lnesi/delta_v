@@ -10,17 +10,20 @@ class EnemyBase extends SpaceShip{
 	public moveRelease:number;
 	public accelaration:number;
 	public maxSpeed:number;
+	public minSpeed:number;
 	public fireTime:number;
 	public on:boolean=false;
 	public target:Phaser.Point=new Phaser.Point(0,0);
 	public clock:number=0
-	constructor(state:PlayState,index:number,sprite_id:string,maxSpeed:number=100,accelaration:number=50,fireTime:number=1000){
+	public timeOffset:number=0;
+	constructor(state:PlayState,index:number,sprite_id:string,accelaration:number=50,fireTime:number=1000,maxSpeed:number=100,minSpeed:number=100){
 		super(state.game);
 		this.state=state;
 		this.index=index;
 
 		this.fireTime=fireTime;
 		this.maxSpeed=maxSpeed;
+		this.minSpeed=minSpeed;
 		this.accelaration=accelaration;
 		
 		

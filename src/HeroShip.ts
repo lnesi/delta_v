@@ -1,4 +1,4 @@
-///<reference path="objects/SpaceShip"/>
+///<reference path="objects/SpaceShip.ts"/>
 
 class HeroShip extends SpaceShip{
 	state: PlayState

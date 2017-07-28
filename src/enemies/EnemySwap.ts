@@ -12,7 +12,7 @@ class EnemySwap extends EnemyBase{
 			}
 			console.log("swap2",this.xTarget);
 		}
-		console.log(this.xTarget);
+	
 		this.target=new Phaser.Point(this.xTarget,this.target.y);
 		super.update();
 	}

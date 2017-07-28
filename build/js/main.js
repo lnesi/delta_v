@@ -94,7 +94,7 @@ var SpaceShip = (function (_super) {
     };
     return SpaceShip;
 }(Phaser.Group));
-///<reference path="objects/SpaceShip"/>
+///<reference path="objects/SpaceShip.ts"/>
 var HeroShip = (function (_super) {
     __extends(HeroShip, _super);
     function HeroShip(state) {
@@ -223,10 +223,11 @@ var SpaceBackground = (function (_super) {
 ///<reference path="../objects/SpaceShip.ts"/>
 var EnemyBase = (function (_super) {
     __extends(EnemyBase, _super);
-    function EnemyBase(state, index, sprite_id, maxSpeed, accelaration, fireTime) {
-        if (maxSpeed === void 0) { maxSpeed = 100; }
+    function EnemyBase(state, index, sprite_id, accelaration, fireTime, maxSpeed, minSpeed) {
         if (accelaration === void 0) { accelaration = 50; }
         if (fireTime === void 0) { fireTime = 1000; }
+        if (maxSpeed === void 0) { maxSpeed = 100; }
+        if (minSpeed === void 0) { minSpeed = 100; }
         var _this = _super.call(this, state.game) || this;
         _this.offsetWidth = 100;
         _this.offsetHeight = 100;
@@ -234,10 +235,12 @@ var EnemyBase = (function (_super) {
         _this.on = false;
         _this.target = new Phaser.Point(0, 0);
         _this.clock = 0;
+        _this.timeOffset = 0;
         _this.state = state;
         _this.index = index;
         _this.fireTime = fireTime;
         _this.maxSpeed = maxSpeed;
+        _this.minSpeed = minSpeed;
         _this.accelaration = accelaration;
         _this.shipBody = new Phaser.Sprite(state.game, 0, 0, sprite_id);
         state.physics.enable(_this.shipBody, Phaser.Physics.ARCADE);
@@ -320,7 +323,7 @@ var Enemy01 = (function (_super) {
     function Enemy01(state, index, xTarget, yTarget) {
         if (xTarget === void 0) { xTarget = 0; }
         if (yTarget === void 0) { yTarget = 0; }
-        var _this = _super.call(this, state, index, "enemy_01", 1, 200) || this;
+        var _this = _super.call(this, state, index, "enemy_01", 200) || this;
         _this.fireTime = 1000;
         _this.weapon = new Weapon(_this, 'enemy_fire_bullet', 'sfx_laser1', new Phaser.Point(0, 0), state.weaponsLayer);
         return _this;
@@ -331,7 +334,7 @@ var Enemy01 = (function (_super) {
 var Enemy02 = (function (_super) {
     __extends(Enemy02, _super);
     function Enemy02(state, index) {
-        var _this = _super.call(this, state, index, "enemy_02", 100, 200) || this;
+        var _this = _super.call(this, state, index, "enemy_02", 200) || this;
         _this.target = new Phaser.Point(Phaser.Math.between(_this.offsetWidth, Game.globalWidth - _this.offsetWidth), Game.globalHeight + _this.offsetHeight);
         _this.weapon = new Weapon(_this, 'enemy_fire_bullet', 'sfx_laser1', new Phaser.Point(0, 0), state.weaponsLayer);
         return _this;
@@ -357,7 +360,7 @@ var EnemySweep = (function (_super) {
 var Enemy03 = (function (_super) {
     __extends(Enemy03, _super);
     function Enemy03(state, index) {
-        var _this = _super.call(this, state, index, "enemy_03", 100, 400) || this;
+        var _this = _super.call(this, state, index, "enemy_03", 400) || this;
         _this.target = new Phaser.Point(0, Game.globalHeight * 1.2);
         _this.weapon = new Weapon(_this, 'enemy_fire_bullet', 'sfx_laser1', new Phaser.Point(0, 0), state.weaponsLayer);
         return _this;
@@ -384,7 +387,6 @@ var EnemySwap = (function (_super) {
             }
             console.log("swap2", this.xTarget);
         }
-        console.log(this.xTarget);
         this.target = new Phaser.Point(this.xTarget, this.target.y);
         _super.prototype.update.call(this);
     };
@@ -394,13 +396,58 @@ var EnemySwap = (function (_super) {
 var Enemy04 = (function (_super) {
     __extends(Enemy04, _super);
     function Enemy04(state, index) {
-        var _this = _super.call(this, state, index, "enemy_03", 100, 400) || this;
-        _this.target = new Phaser.Point(0, Game.globalHeight * 1.2);
+        var _this = _super.call(this, state, index, "enemy_03", 400) || this;
+        _this.target = new Phaser.Point(Phaser.Math.between(_this.offsetWidth, Game.globalWidth - _this.offsetWidth), Game.globalHeight + _this.offsetHeight);
         _this.weapon = new Weapon(_this, 'enemy_fire_bullet', 'sfx_laser1', new Phaser.Point(0, 0), state.weaponsLayer);
         return _this;
     }
     return Enemy04;
 }(EnemySwap));
+///<reference path="EnemyBase.ts"/>
+var EnemyCircle = (function (_super) {
+    __extends(EnemyCircle, _super);
+    function EnemyCircle() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.angleCicle = 0;
+        _this.radius = 300;
+        return _this;
+    }
+    EnemyCircle.prototype.update = function () {
+        var difX = this.getX() - this.state.hero.getX();
+        var difY = this.getY() - this.state.hero.getY();
+        var dif = Math.sqrt(Math.pow(difX, 2) + Math.pow(difY, 2));
+        if (dif <= this.radius + 50) {
+            this.angleCicle = this.angleCicle + 1;
+            console.log(Math.sin(Phaser.Math.degToRad(this.angleCicle)) * this.radius);
+            var iX = this.state.hero.getX() + (Math.sin(Phaser.Math.degToRad(this.angleCicle)) * this.radius);
+            var iY = this.state.hero.getY() + (Math.cos(Phaser.Math.degToRad(this.angleCicle)) * this.radius);
+            this.setX(iX);
+            this.setY(iY);
+            this.target = new Phaser.Point(iX, iY);
+            var aHero = this.state.hero.getX() - this.getX();
+            var bHero = this.state.hero.getY() - this.getY();
+            this.shipBody.body.rotation = Math.atan2(aHero, bHero) * (-180 / Math.PI);
+        }
+        else {
+            this.target = new Phaser.Point(this.state.hero.getX(), this.state.hero.getY());
+            _super.prototype.update.call(this);
+        }
+        //super.update();
+        // console.log(this.state.hero.getX());
+    };
+    return EnemyCircle;
+}(EnemyBase));
+///<reference path="EnemyCircle.ts"/>
+var Enemy05 = (function (_super) {
+    __extends(Enemy05, _super);
+    function Enemy05(state, index) {
+        var _this = _super.call(this, state, index, "enemy_03", 100) || this;
+        _this.target = new Phaser.Point(0, Game.globalHeight * 1.2);
+        _this.weapon = new Weapon(_this, 'enemy_fire_bullet', 'sfx_laser1', new Phaser.Point(0, 0), state.weaponsLayer);
+        return _this;
+    }
+    return Enemy05;
+}(EnemyCircle));
 var LoadableState = (function (_super) {
     __extends(LoadableState, _super);
     function LoadableState() {
@@ -483,7 +530,7 @@ var PlayState = (function (_super) {
         this.hero.y = Game.globalHeight / 2;
         this.heroLayer.add(this.hero);
         this.initTime = this.game.time.now;
-        // this.enemy=new Enemy03(this,0);
+        // this.enemy=new Enemy05(this,0);
         // this.enemyLayer.addChild(this.enemy);
         // this.enemy.init();
     };
