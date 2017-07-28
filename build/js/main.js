@@ -228,6 +228,8 @@ var Enemy = (function (_super) {
         if (accelaration === void 0) { accelaration = 50; }
         if (fireTime === void 0) { fireTime = 1000; }
         var _this = _super.call(this, state.game) || this;
+        _this.offsetWidth = 100;
+        _this.offsetHeight = 100;
         _this.life = 1;
         _this.on = false;
         _this.target = new Phaser.Point(0, 0);
@@ -247,11 +249,9 @@ var Enemy = (function (_super) {
         return _this;
         //this.shipBody.body.collideWorldBounds=true;
     }
-    Enemy.prototype.init = function (x, y) {
-        if (x === void 0) { x = 0; }
-        if (y === void 0) { y = 0; }
-        this.setX(x);
-        this.setY(y);
+    Enemy.prototype.init = function () {
+        this.setX(Phaser.Math.between(this.offsetWidth, Game.globalWidth - this.offsetWidth));
+        this.setY(-this.offsetHeight);
         this.deltaTime = this.state.game.time.now + this.fireTime;
         this.on = true;
     };
@@ -326,16 +326,39 @@ var Enemy01 = (function (_super) {
 }(EnemyKamikaze));
 var Enemy02 = (function (_super) {
     __extends(Enemy02, _super);
-    function Enemy02(state, index, xTarget, yTarget) {
-        if (xTarget === void 0) { xTarget = 0; }
-        if (yTarget === void 0) { yTarget = 0; }
+    function Enemy02(state, index) {
         var _this = _super.call(this, state, index, "enemy_02", 100, 200) || this;
-        _this.target = new Phaser.Point(xTarget, yTarget);
+        _this.target = new Phaser.Point(Phaser.Math.between(_this.offsetWidth, Game.globalWidth - _this.offsetWidth), Game.globalHeight + _this.offsetHeight);
         _this.weapon = new Weapon(_this, 'enemy_fire_bullet', 'sfx_laser1', new Phaser.Point(0, 0), state.weaponsLayer);
         return _this;
     }
     return Enemy02;
 }(Enemy));
+var EnemySweep = (function (_super) {
+    __extends(EnemySweep, _super);
+    function EnemySweep() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.xTracker = 0;
+        return _this;
+    }
+    EnemySweep.prototype.update = function () {
+        this.xTracker = this.xTracker + 0.01;
+        this.target = new Phaser.Point(Math.sin(this.xTracker) * 10000, this.target.y);
+        _super.prototype.update.call(this);
+    };
+    return EnemySweep;
+}(Enemy));
+///<reference path="EnemySweep"/>
+var Enemy03 = (function (_super) {
+    __extends(Enemy03, _super);
+    function Enemy03(state, index) {
+        var _this = _super.call(this, state, index, "enemy_03", 100, 200) || this;
+        _this.target = new Phaser.Point(0, Game.globalHeight + _this.offsetHeight);
+        _this.weapon = new Weapon(_this, 'enemy_fire_bullet', 'sfx_laser1', new Phaser.Point(0, 0), state.weaponsLayer);
+        return _this;
+    }
+    return Enemy03;
+}(EnemySweep));
 var LoadableState = (function (_super) {
     __extends(LoadableState, _super);
     function LoadableState() {
@@ -395,6 +418,7 @@ var PlayState = (function (_super) {
         this.load.atlasJSONArray('hero_ship_0', 'assets/sprites/hero_ship_0.png', 'assets/sprites/hero_ship_0.json');
         this.load.atlasJSONArray('enemy_01', 'assets/sprites/enemy_01.png', 'assets/sprites/enemy_01.json');
         this.load.atlasJSONArray('enemy_02', 'assets/sprites/enemy_02.png', 'assets/sprites/enemy_02.json');
+        this.load.atlasJSONArray('enemy_03', 'assets/sprites/enemy_03.png', 'assets/sprites/enemy_03.json');
         this.load.image('enemy_fire_bullet', 'assets/img/enemy_fire_bullet.png');
         this.load.image('hero_fire_bullet', 'assets/img/hero_fire_bullet.png');
         this.load.audio('sfx_laser1', "assets/audio/sfx_laser1.ogg");
@@ -417,9 +441,9 @@ var PlayState = (function (_super) {
         this.hero.y = Game.globalHeight / 2;
         this.heroLayer.add(this.hero);
         this.initTime = this.game.time.now;
-        // this.enemy1=new Enemy02(this,0,5000,5000);
-        // this.enemyLayer.addChild(this.enemy1);
-        // this.enemy1.init(100,100);
+        // this.enemy=new Enemy03(this,0);
+        // this.enemyLayer.addChild(this.enemy);
+        // this.enemy.init();
     };
     PlayState.prototype.getTime = function () {
         this.clock++;
@@ -430,16 +454,25 @@ var PlayState = (function (_super) {
     PlayState.prototype.update = function () {
         this.clock++;
         if ((this.clock % 200) == 0) {
+            this.indexCount++;
             console.log("SPAWN Enemy02");
-            var enemy = new Enemy02(this, 0, Game.globalWidth / 2, Game.globalHeight * 2);
+            var enemy = new Enemy02(this, this.indexCount);
             this.enemyLayer.addChild(enemy);
-            enemy.init(Phaser.Math.between(100, Game.globalWidth - 100), -100);
+            enemy.init();
+        }
+        if ((this.clock % 300) == 0) {
+            this.indexCount++;
+            console.log("SPAWN Enemy03");
+            var enemy = new Enemy03(this, this.indexCount);
+            this.enemyLayer.addChild(enemy);
+            enemy.init();
         }
         if ((this.clock % 500) == 0) {
+            this.indexCount++;
             console.log("SPAWN Enemy01");
-            var enemy = new Enemy01(this, 1);
+            var enemy = new Enemy01(this, this.indexCount);
             this.enemyLayer.addChild(enemy);
-            enemy.init(Phaser.Math.between(100, Game.globalWidth - 100), -100);
+            enemy.init();
         }
         //this.game.physics.arcade.collide(this.bodys);
     };

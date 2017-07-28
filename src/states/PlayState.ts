@@ -5,12 +5,12 @@ class PlayState extends LoadableState{
 	enemyLayer:Phaser.Group
 	heroLayer:Phaser.Group
 	foregroundLayer:Phaser.Group
-	enemy1:Enemy
-	enemy2:Enemy
+	enemy:Enemy
 	background:Phaser.TileSprite;
 	bodys:any
 	initTime:number
 	clock:number=0
+	indexCount:number;
 	preload(){
 		super.preload();
 		this.load.image('Background_01','assets/img/background_01.png');
@@ -19,6 +19,7 @@ class PlayState extends LoadableState{
 		this.load.atlasJSONArray('hero_ship_0','assets/sprites/hero_ship_0.png','assets/sprites/hero_ship_0.json');
 		this.load.atlasJSONArray('enemy_01','assets/sprites/enemy_01.png','assets/sprites/enemy_01.json');
 		this.load.atlasJSONArray('enemy_02','assets/sprites/enemy_02.png','assets/sprites/enemy_02.json');
+		this.load.atlasJSONArray('enemy_03','assets/sprites/enemy_03.png','assets/sprites/enemy_03.json');
 		this.load.image('enemy_fire_bullet','assets/img/enemy_fire_bullet.png');
 		this.load.image('hero_fire_bullet','assets/img/hero_fire_bullet.png');
 		this.load.audio('sfx_laser1',"assets/audio/sfx_laser1.ogg");
@@ -43,9 +44,9 @@ class PlayState extends LoadableState{
 		this.heroLayer.add(this.hero);
 		this.initTime=this.game.time.now;
 		
-		// this.enemy1=new Enemy02(this,0,5000,5000);
-		// this.enemyLayer.addChild(this.enemy1);
-		// this.enemy1.init(100,100);
+		 // this.enemy=new Enemy03(this,0);
+		 // this.enemyLayer.addChild(this.enemy);
+		 // this.enemy.init();
 
 
 	}
@@ -61,16 +62,27 @@ class PlayState extends LoadableState{
 		this.clock++;
 		
 		if((this.clock%200)==0){
+			this.indexCount++;
 			console.log("SPAWN Enemy02");
-			var enemy=new Enemy02(this,0,Game.globalWidth/2,Game.globalHeight*2);
+			let enemy=new Enemy02(this,this.indexCount);
 			this.enemyLayer.addChild(enemy);
-			enemy.init(Phaser.Math.between(100,Game.globalWidth-100),-100);
+			enemy.init();
 		}
-		if((this.clock%500)==0){
-			console.log("SPAWN Enemy01");
-			var enemy=new Enemy01(this,1);
+
+		if((this.clock%300)==0){
+			this.indexCount++;
+			console.log("SPAWN Enemy03");
+			let enemy=new Enemy03(this,this.indexCount);
 			this.enemyLayer.addChild(enemy);
-			enemy.init(Phaser.Math.between(100,Game.globalWidth-100),-100);
+			enemy.init();
+		}
+
+		if((this.clock%500)==0){
+			this.indexCount++
+			console.log("SPAWN Enemy01");
+			let enemy=new Enemy01(this,this.indexCount);
+			this.enemyLayer.addChild(enemy);
+			enemy.init();
 		}
 		//this.game.physics.arcade.collide(this.bodys);
 	

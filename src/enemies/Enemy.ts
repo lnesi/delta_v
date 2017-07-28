@@ -1,15 +1,18 @@
 ///<reference path="../objects/SpaceShip"/>
 class Enemy extends SpaceShip{
-	state:PlayState
-	index:number
-	life:number=1;
-	moveWeight:number;
-	moveRelease:number;
-	accelaration:number;
-	maxSpeed:number;
-	fireTime:number;
-	on:boolean=false;
-	target:Phaser.Point=new Phaser.Point(0,0);
+	public offsetWidth:number=100;
+	public offsetHeight:number=100;
+	public state:PlayState
+	public index:number
+	public life:number=1;
+	public moveWeight:number;
+	public moveRelease:number;
+	public accelaration:number;
+	public maxSpeed:number;
+	public fireTime:number;
+	public on:boolean=false;
+	public target:Phaser.Point=new Phaser.Point(0,0);
+
 	constructor(state:PlayState,index:number,sprite_id:string,maxSpeed:number=100,accelaration:number=50,fireTime:number=1000){
 		super(state.game);
 		this.state=state;
@@ -35,9 +38,9 @@ class Enemy extends SpaceShip{
 
 	}
 
-	init(x:number=0,y:number=0){
-		this.setX(x);
-		this.setY(y);
+	init(){
+		this.setX(Phaser.Math.between(this.offsetWidth,Game.globalWidth-this.offsetWidth));
+		this.setY(-this.offsetHeight);
 		this.deltaTime=this.state.game.time.now+this.fireTime;
 		this.on=true;
 
