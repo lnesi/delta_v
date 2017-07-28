@@ -216,7 +216,7 @@ var SpaceBackground = (function (_super) {
         return _this;
     }
     SpaceBackground.prototype.update = function () {
-        this.tilePosition.y += 2;
+        this.tilePosition.y += 1;
     };
     return SpaceBackground;
 }(Phaser.TileSprite));
@@ -430,12 +430,13 @@ var PlayState = (function (_super) {
     PlayState.prototype.update = function () {
         this.clock++;
         if ((this.clock % 200) == 0) {
-            console.log("SPAWN");
+            console.log("SPAWN Enemy02");
             var enemy = new Enemy02(this, 0, Game.globalWidth / 2, Game.globalHeight * 2);
             this.enemyLayer.addChild(enemy);
             enemy.init(Phaser.Math.between(100, Game.globalWidth - 100), -100);
         }
         if ((this.clock % 500) == 0) {
+            console.log("SPAWN Enemy01");
             var enemy = new Enemy01(this, 1);
             this.enemyLayer.addChild(enemy);
             enemy.init(Phaser.Math.between(100, Game.globalWidth - 100), -100);

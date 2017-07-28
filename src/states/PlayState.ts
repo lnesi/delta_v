@@ -13,7 +13,7 @@ class PlayState extends LoadableState{
 	clock:number=0
 	preload(){
 		super.preload();
-		this.load.image('BackgroundDarkPurple','assets/img/darkPurple.png');
+		this.load.image('Background_01','assets/img/background_01.png');
 		this.load.atlasXML('mainsprite','assets/sprites/sheet.png','assets/sprites/sheet.xml');
 		this.load.spritesheet('explosion','assets/img/explosion.png',64,64);
 		this.load.atlasJSONArray('hero_ship_0','assets/sprites/hero_ship_0.png','assets/sprites/hero_ship_0.json');
