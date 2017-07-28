@@ -252,6 +252,7 @@ var Enemy = (function (_super) {
         if (y === void 0) { y = 0; }
         this.setX(x);
         this.setY(y);
+        this.deltaTime = this.state.game.time.now + this.fireTime;
         this.on = true;
     };
     Enemy.prototype.getSpeed = function () {

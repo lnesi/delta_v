@@ -38,7 +38,9 @@ class Enemy extends SpaceShip{
 	init(x:number=0,y:number=0){
 		this.setX(x);
 		this.setY(y);
+		this.deltaTime=this.state.game.time.now+this.fireTime;
 		this.on=true;
+
 	}
 	getSpeed():number{
 		return Math.sqrt(Math.pow(this.shipBody.body.velocity.x,2)+Math.pow(this.shipBody.body.velocity.x,2));
