@@ -44,9 +44,9 @@ class PlayState extends LoadableState{
 		this.heroLayer.add(this.hero);
 		this.initTime=this.game.time.now;
 		
-		  // this.enemy=new Enemy05(this,0);
-		  // this.enemyLayer.addChild(this.enemy);
-		  // this.enemy.init();
+		  this.enemy=new Enemy05(this,0);
+		  this.enemyLayer.addChild(this.enemy);
+		  this.enemy.init();
 
 
 	}

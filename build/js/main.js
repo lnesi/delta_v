@@ -441,7 +441,7 @@ var EnemyCircle = (function (_super) {
 var Enemy05 = (function (_super) {
     __extends(Enemy05, _super);
     function Enemy05(state, index) {
-        var _this = _super.call(this, state, index, "enemy_03", 100) || this;
+        var _this = _super.call(this, state, index, "enemy_03", 300) || this;
         _this.target = new Phaser.Point(0, Game.globalHeight * 1.2);
         _this.weapon = new Weapon(_this, 'enemy_fire_bullet', 'sfx_laser1', new Phaser.Point(0, 0), state.weaponsLayer);
         return _this;
@@ -530,9 +530,9 @@ var PlayState = (function (_super) {
         this.hero.y = Game.globalHeight / 2;
         this.heroLayer.add(this.hero);
         this.initTime = this.game.time.now;
-        // this.enemy=new Enemy05(this,0);
-        // this.enemyLayer.addChild(this.enemy);
-        // this.enemy.init();
+        this.enemy = new Enemy05(this, 0);
+        this.enemyLayer.addChild(this.enemy);
+        this.enemy.init();
     };
     PlayState.prototype.getTime = function () {
         this.clock++;
