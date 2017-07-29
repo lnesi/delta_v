@@ -118,7 +118,7 @@ class EnemyBase extends SpaceShip{
 		//this.weapon.sfx.play();
 	}
 	weaponHitHandler(heroBody:Phaser.Sprite,bullet:Phaser.Sprite){
-		console.log("HIT HERO")
+		//console.log("HIT HERO")
 		bullet.kill();
 	}
 
@@ -126,7 +126,7 @@ class EnemyBase extends SpaceShip{
 		//this.life=0;
 		bullet.kill();
 		this.explode();
-		console.log("COLLISION bullet");
+		//console.log("COLLISION bullet");
 	}
 	explode(){
 		this.on=false;
@@ -142,6 +142,6 @@ class EnemyBase extends SpaceShip{
 	collisionHandler(){
 		//this.life=0;
 		this.explode();
-		console.log("COLLISION hero");
+		//console.log("COLLISION hero");
 	}
 }

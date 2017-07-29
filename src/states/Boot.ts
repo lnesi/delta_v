@@ -10,7 +10,8 @@ class Boot extends Phaser.State{
 		
 		this.load.image('preload_back', 'assets/img/darkPurple.png');
         this.load.image('preload_bar', 'assets/img/preload_bar.png');
-        
+        this.game.input.addPointer();
+    	this.game.input.addPointer();
 		// Phaser will automatically pause if the browser tab the game is in loses focus. You can disable that here:
         
 
