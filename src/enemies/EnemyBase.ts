@@ -47,7 +47,7 @@ class EnemyBase extends SpaceShip{
 		
 
 	}
-	
+
 	init(x:number=null,y:number=null){
 		if(x===null){
 			this.setX(Phaser.Math.between(this.offsetWidth,Game.globalWidth-this.offsetWidth));
@@ -64,7 +64,7 @@ class EnemyBase extends SpaceShip{
 		this.on=true;
 
 	}
-	
+
 	update(){
 		if(this.on && this.state.game.time.now>this.deltaTime){
 			this.clock++;
@@ -80,6 +80,7 @@ class EnemyBase extends SpaceShip{
 	
 	
 	checkCollision(){
+		this.game.physics.arcade.overlap(this.state.hero.shipBody,this.weapon.bullets,this.weaponHitHandler,null,this);
 		this.game.physics.arcade.overlap(this.shipBody, this.state.hero.weapon.bullets, this.hitHandler, null, this);
 		this.game.physics.arcade.overlap(this.shipBody, this.state.hero.shipBody, this.collisionHandler, null, this);
 	}
