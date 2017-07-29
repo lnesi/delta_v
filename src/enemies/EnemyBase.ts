@@ -8,7 +8,7 @@ class EnemyBase extends SpaceShip{
 	public life:number=1;
 	public moveWeight:number;
 	public moveRelease:number;
-	public accelaration:number;
+	public acceleration:number;
 	public maxSpeed:number;
 	public minSpeed:number;
 	public fireTime:number;
@@ -17,7 +17,7 @@ class EnemyBase extends SpaceShip{
 	public clock:number=0
 	public timeOffset:number=0;
 	public damage:number
-	constructor(state:PlayState,index:number,sprite_id:string,accelaration:number=null,fireTime:number=1000,maxSpeed:number=500,minSpeed:number=100,damage:number=10){
+	constructor(state:PlayState,index:number,sprite_id:string,acceleration:number=null,fireTime:number=1000,maxSpeed:number=500,minSpeed:number=100,damage:number=10){
 		super(state.game);
 		this.state=state;
 		this.index=index;
@@ -25,10 +25,10 @@ class EnemyBase extends SpaceShip{
 		this.fireTime=fireTime;
 		this.maxSpeed=maxSpeed;
 		this.minSpeed=minSpeed;
-		if(accelaration===null){
-			this.accelaration=Phaser.Math.between(this.minSpeed,this.maxSpeed);
+		if(acceleration===null){
+			this.acceleration=Phaser.Math.between(this.minSpeed,this.maxSpeed);
 		}else{
-			this.accelaration=accelaration;
+			this.acceleration=acceleration;
 		}
 		
 		
@@ -47,7 +47,7 @@ class EnemyBase extends SpaceShip{
 		
 
 	}
-
+	
 	init(x:number=null,y:number=null){
 		if(x===null){
 			this.setX(Phaser.Math.between(this.offsetWidth,Game.globalWidth-this.offsetWidth));
@@ -60,10 +60,11 @@ class EnemyBase extends SpaceShip{
 			this.setY(y);
 		}
 		this.deltaTime=this.state.game.time.now+this.fireTime;
+		
 		this.on=true;
 
 	}
-
+	
 	update(){
 		if(this.on && this.state.game.time.now>this.deltaTime){
 			this.clock++;
@@ -83,11 +84,12 @@ class EnemyBase extends SpaceShip{
 		this.game.physics.arcade.overlap(this.shipBody, this.state.hero.shipBody, this.collisionHandler, null, this);
 	}
 
-	moveToTarget(){
+	moveToTarget(acceleration:number=null){
+		if(acceleration===null) acceleration=this.acceleration;
 		let a = this.target.x-this.getX();
 		let b = this.target.y-this.getY();
-		var dx=this.accelaration*Math.sin(Math.atan2(a,b));
-		var dy=this.accelaration*Math.cos(Math.atan2(a,b));
+		var dx=acceleration*Math.sin(Math.atan2(a,b));
+		var dy=acceleration*Math.cos(Math.atan2(a,b));
 		this.shipBody.body.velocity.y=dy/2;
 		this.shipBody.body.velocity.x=dx/2;
 	}
@@ -126,6 +128,7 @@ class EnemyBase extends SpaceShip{
 		console.log("COLLISION bullet");
 	}
 	explode(){
+		this.on=false;
 		var explosion=new Phaser.Sprite(this.state.game,this.getX(),this.getY(),'explosion');
 		explosion.anchor.setTo(0.5,0.5);
 		explosion.animations.add('explosion');

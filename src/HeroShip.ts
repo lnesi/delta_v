@@ -76,7 +76,7 @@ class HeroShip extends SpaceShip{
 		this.shipBody.body.acceleration.y=0;
 		
 		
-		this.moveControls.update();
+		this.moveControls.update(this);
 	
      	
      	if(this.moveControls.get().x!=0){
@@ -114,7 +114,13 @@ class HeroShip extends SpaceShip{
              this.fire();
         
         }
-	    
+
+  //       if(this.game.input.pointer1.isDown && this.game.input.pointer2.isDown){
+		// 	this.fire();
+		// }
+	    if(this.game.input.activePointer.isDown){
+			this.fire();	
+		}
 	    this.animate(this.moveControls.getDescription());
 	      
         

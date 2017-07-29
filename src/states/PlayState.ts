@@ -1,16 +1,17 @@
 class PlayState extends LoadableState{
-	hero:HeroShip
-	backgroundLayer:Phaser.Group
-	weaponsLayer:Phaser.Group
-	enemyLayer:Phaser.Group
-	heroLayer:Phaser.Group
-	foregroundLayer:Phaser.Group
-	enemy:EnemyBase
-	background:Phaser.TileSprite;
-	bodys:any
-	initTime:number
-	clock:number=0
-	indexCount:number;
+	public hero:HeroShip
+	public backgroundLayer:Phaser.Group
+	public weaponsLayer:Phaser.Group
+	public enemyLayer:Phaser.Group
+	public heroLayer:Phaser.Group
+	public foregroundLayer:Phaser.Group
+	public enemy:EnemyBase
+	private background:Phaser.TileSprite;
+	public bodys:any
+	private initTime:number
+	public clock:number=0
+	private indexCount:number;
+	private allowKiller:boolean=true;
 	preload(){
 		super.preload();
 		this.load.image('Background_01','assets/img/background_01.png');
@@ -44,10 +45,11 @@ class PlayState extends LoadableState{
 		this.heroLayer.add(this.hero);
 		this.initTime=this.game.time.now;
 		
-		  this.enemy=new Enemy05(this,0);
-		  this.enemyLayer.addChild(this.enemy);
-		  this.enemy.init();
+		this.enemy=new Enemy05(this,0);
+		this.enemyLayer.addChild(this.enemy);
+		this.enemy.init();
 
+	
 
 	}
 	getTime(){
@@ -101,12 +103,23 @@ class PlayState extends LoadableState{
 			enemy.init();
 		}
 	}
+	spawnKiller(){
+		if(this.allowKiller){
+			let enemy=new Enemy05(this,0);
+			this.enemyLayer.addChild(enemy);
+			enemy.init();
+		}
+	
+	}
 
 	collisionHandler(){
 		console.log("COLLISION");
 	}
 
 	render(){
+		// this.game.debug.pointer(this.game.input.mousePointer);
+		// this.game.debug.pointer(this.game.input.pointer1);
+  //   	this.game.debug.pointer(this.game.input.pointer2);
 		//this.game.debug.body(this.hero.shipBody);
 		//this.game.debug.body(this.enemy1.shipBody);
 		//this.game.debug.body(this.enemy2.shipBody);
@@ -114,3 +127,4 @@ class PlayState extends LoadableState{
 		//this.game.debug.bodyInfo(this.hero.shipBody,10,10);
 	}
 }
+
