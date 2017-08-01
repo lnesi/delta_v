@@ -43,7 +43,7 @@ class HeroShip extends SpaceShip {
         this.add(this.shipBody);
 
         this.state.physics.enable(this.shipBody, Phaser.Physics.ARCADE, true);
-        this.shipBody.body.collideWorldBounds = true;
+        this.shipBody.body.collideWorldBounds = false;
         this.shipBody.body.syncBounds = true;
         this.shipBody.body.setCircle(this.shipBody.height / 2.8, 0, 0)
 
@@ -74,7 +74,7 @@ class HeroShip extends SpaceShip {
     update() {
         if (this.active) {
             this.shipBody.body.acceleration.y = 0;
-
+            this.shipBody.body.acceleration.x = 0;
 
             this.moveControls.update(this);
 
@@ -126,6 +126,10 @@ class HeroShip extends SpaceShip {
 
             this.shipBody.body.acceleration.x = this.acceleration.x;
             this.shipBody.body.acceleration.y = this.acceleration.y;
+        }else{
+            this.animate("stand");
+            this.shipBody.body.acceleration.x = 0;
+            this.shipBody.body.acceleration.y = 0;
         }
 
 
@@ -158,20 +162,48 @@ class HeroShip extends SpaceShip {
         if(this.active){
         	this.active=false;
         	let sfx = new Phaser.Sound(this.state.game, 'sfx_explosion', 1);
-	        sfx.play();
+	        //sfx.play();
 	        var explosion = new Phaser.Sprite(this.state.game, this.getX(), this.getY(), 'explosion');
 	        explosion.anchor.setTo(0.5, 0.5);
 	        explosion.animations.add('explosion');
+            explosion.animations.getAnimation('explosion').onComplete.add(this.reSpawn.bind(this));
 	        explosion.animations.getAnimation('explosion').play(30, false, true);
 	        this.state.enemyLayer.add(explosion);
 	        this.shipBody.visible=false;
-	        this.shipBody.physicsEnabled=false;
+	        
+       
         }
        
 
     }
+
+    reSpawn(){
+        this.life=100;
+        setTimeout(function(){this.init()}.bind(this),500);
+        
+    }
+
+
     init(){
-    	this.active=true;
+        this.shipBody.visible=true;
+        this.shipBody.x=Game.globalWidth/2;
+        this.shipBody.y=Game.globalHeight+200;
+        this.alpha=0.5;
+        let tween:Phaser.Tween=this.game.add.tween(this.shipBody);
+        let tweenBlink:Phaser.Tween=this.game.add.tween(this);
+        tween.to({x:Game.globalWidth/2,y:Game.globalHeight/2},2000,Phaser.Easing.Exponential.Out);
+        tweenBlink.to({alpha: 1},200,"Linear",true,0,-1,true);
+        tween.onComplete.add(function(){
+            this.activate();
+            tweenBlink.stop();
+            this.alpha=1;
+        }, this);
+        tween.start();
+    }
+
+    activate(){
+        this.shipBody.body.collideWorldBounds = true;
+        this.active=true;
     }
     spawn() {
 

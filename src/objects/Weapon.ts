@@ -36,7 +36,7 @@ class Weapon extends Phaser.Weapon{
 		this.trackSprite(ship.shipBody,this.emiterOffset.x,this.emiterOffset.y);
 	}
 	fireWeapon():Phaser.Bullet{
-		this.sfx.play();
+		//this.sfx.play();
 		return this.fire( );
 	}
 

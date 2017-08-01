@@ -45,8 +45,7 @@ class PlayState extends LoadableState{
 		
 		
 		this.hero=new HeroShip(this);
-		this.hero.x=Game.globalWidth/2;
-		this.hero.y=Game.globalHeight/2;
+	
 		this.heroLayer.add(this.hero);
 		this.initTime=this.game.time.now;
 		this.hero.init();

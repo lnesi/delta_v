@@ -95,7 +95,7 @@ var Weapon = (function (_super) {
         return _this;
     }
     Weapon.prototype.fireWeapon = function () {
-        this.sfx.play();
+        //this.sfx.play();
         return this.fire();
     };
     Weapon.prototype.update = function () {
@@ -177,7 +177,7 @@ var HeroShip = (function (_super) {
         _this.shipBody.anchor.setTo(0.5, 0.5);
         _this.add(_this.shipBody);
         _this.state.physics.enable(_this.shipBody, Phaser.Physics.ARCADE, true);
-        _this.shipBody.body.collideWorldBounds = true;
+        _this.shipBody.body.collideWorldBounds = false;
         _this.shipBody.body.syncBounds = true;
         _this.shipBody.body.setCircle(_this.shipBody.height / 2.8, 0, 0);
         _this.weapon = new HeroGunLevel1(_this);
@@ -202,6 +202,7 @@ var HeroShip = (function (_super) {
     HeroShip.prototype.update = function () {
         if (this.active) {
             this.shipBody.body.acceleration.y = 0;
+            this.shipBody.body.acceleration.x = 0;
             this.moveControls.update(this);
             if (this.moveControls.get().x != 0) {
                 this.acceleration.x = this.maxAcceleration * this.moveControls.get().x;
@@ -242,6 +243,11 @@ var HeroShip = (function (_super) {
             this.shipBody.body.acceleration.x = this.acceleration.x;
             this.shipBody.body.acceleration.y = this.acceleration.y;
         }
+        else {
+            this.animate("stand");
+            this.shipBody.body.acceleration.x = 0;
+            this.shipBody.body.acceleration.y = 0;
+        }
     };
     HeroShip.prototype.hitHandler = function (shipBody, bullet) {
         console.log("Collidion hero");
@@ -265,17 +271,38 @@ var HeroShip = (function (_super) {
         if (this.active) {
             this.active = false;
             var sfx = new Phaser.Sound(this.state.game, 'sfx_explosion', 1);
-            sfx.play();
+            //sfx.play();
             var explosion = new Phaser.Sprite(this.state.game, this.getX(), this.getY(), 'explosion');
             explosion.anchor.setTo(0.5, 0.5);
             explosion.animations.add('explosion');
+            explosion.animations.getAnimation('explosion').onComplete.add(this.reSpawn.bind(this));
             explosion.animations.getAnimation('explosion').play(30, false, true);
             this.state.enemyLayer.add(explosion);
             this.shipBody.visible = false;
-            this.shipBody.physicsEnabled = false;
         }
     };
+    HeroShip.prototype.reSpawn = function () {
+        this.life = 100;
+        setTimeout(function () { this.init(); }.bind(this), 500);
+    };
     HeroShip.prototype.init = function () {
+        this.shipBody.visible = true;
+        this.shipBody.x = Game.globalWidth / 2;
+        this.shipBody.y = Game.globalHeight + 200;
+        this.alpha = 0.5;
+        var tween = this.game.add.tween(this.shipBody);
+        var tweenBlink = this.game.add.tween(this);
+        tween.to({ x: Game.globalWidth / 2, y: Game.globalHeight / 2 }, 2000, Phaser.Easing.Exponential.Out);
+        tweenBlink.to({ alpha: 1 }, 200, "Linear", true, 0, -1, true);
+        tween.onComplete.add(function () {
+            this.activate();
+            tweenBlink.stop();
+            this.alpha = 1;
+        }, this);
+        tween.start();
+    };
+    HeroShip.prototype.activate = function () {
+        this.shipBody.body.collideWorldBounds = true;
         this.active = true;
     };
     HeroShip.prototype.spawn = function () {
@@ -677,8 +704,6 @@ var PlayState = (function (_super) {
         this.bodys.width = Game.globalWidth;
         this.bodys.height = Game.globalHeight;
         this.hero = new HeroShip(this);
-        this.hero.x = Game.globalWidth / 2;
-        this.hero.y = Game.globalHeight / 2;
         this.heroLayer.add(this.hero);
         this.initTime = this.game.time.now;
         this.hero.init();
