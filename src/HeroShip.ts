@@ -150,6 +150,19 @@ class HeroShip extends SpaceShip{
 
 		//}
 	}
+
+	kill(){
+		//https://garystanton.co.uk/better-explosions-with-phasers-particle-emitter/
+		let sfx=new Phaser.Sound(this.state.game,'sfx_explosion',1);
+		sfx.play();
+		var explosion=new Phaser.Sprite(this.state.game,this.getX(),this.getY(),'explosion');
+		explosion.anchor.setTo(0.5,0.5);
+		explosion.animations.add('explosion');
+		explosion.animations.getAnimation('explosion').play(30,false,true);
+		this.state.enemyLayer.add(explosion);
+		this.shipBody.kill();
+		this.toDestroy=true;
+	}
 	
 
 }

@@ -12,6 +12,7 @@ class PlayState extends LoadableState{
 	public clock:number=0
 	private indexCount:number;
 	private allowKiller:boolean=true;
+	public score:number=0;
 	preload(){
 		super.preload();
 		this.load.image('Background_01','assets/img/background_01.png');
@@ -24,6 +25,7 @@ class PlayState extends LoadableState{
 		this.load.image('enemy_fire_bullet','assets/img/enemy_fire_bullet.png');
 		this.load.image('hero_fire_bullet','assets/img/hero_fire_bullet.png');
 		this.load.audio('sfx_laser1',"assets/audio/sfx_laser1.ogg");
+		this.load.audio('sfx_explosion',"assets/audio/sfx_explosion.mp3");
 		this.game.load.bitmapFont('Roboto', 'assets/fonts/roboto_bold.png', 'assets/fonts/roboto_bold.xml');
 	
 	}
@@ -54,6 +56,8 @@ class PlayState extends LoadableState{
 		let bmpText = new Phaser.BitmapText(this.game,10,Game.globalHeight-50,'Roboto',"delta V",40);
 		this.foregroundLayer.add(bmpText);
 
+		let interfase=new DisplayInterfase(this);
+		this.foregroundLayer.add(interfase);
 	}
 	getTime(){
 		this.clock++

@@ -17,7 +17,8 @@ class EnemyBase extends SpaceShip{
 	public clock:number=0
 	public timeOffset:number=0;
 	public damage:number
-	constructor(state:PlayState,index:number,sprite_id:string,acceleration:number=null,fireTime:number=1000,maxSpeed:number=500,minSpeed:number=100,damage:number=10){
+	public value:number;
+	constructor(state:PlayState,index:number,sprite_id:string,acceleration:number=null,fireTime:number=1000,maxSpeed:number=500,minSpeed:number=100,damage:number=1,value:number=10){
 		super(state.game);
 		this.state=state;
 		this.index=index;
@@ -25,6 +26,7 @@ class EnemyBase extends SpaceShip{
 		this.fireTime=fireTime;
 		this.maxSpeed=maxSpeed;
 		this.minSpeed=minSpeed;
+		this.value=value;
 		if(acceleration===null){
 			this.acceleration=Phaser.Math.between(this.minSpeed,this.maxSpeed);
 		}else{
@@ -119,12 +121,18 @@ class EnemyBase extends SpaceShip{
 	}
 	weaponHitHandler(heroBody:Phaser.Sprite,bullet:Phaser.Sprite){
 		//console.log("HIT HERO")
+		if(this.state.hero.life>=0){
+			this.state.hero.life=this.state.hero.life-this.damage;
+		}else{
+			this.state.hero.kill();
+		}
 		bullet.kill();
 	}
 
 	hitHandler(enemy:Phaser.Sprite,bullet:Phaser.Sprite){
 		//this.life=0;
 		bullet.kill();
+		this.state.score+=this.value;
 		this.explode();
 		//console.log("COLLISION bullet");
 	}
