@@ -82,9 +82,11 @@ class EnemyBase extends SpaceShip{
 	
 	
 	checkCollision(){
-		this.game.physics.arcade.overlap(this.state.hero.shipBody,this.weapon.bullets,this.weaponHitHandler,null,this);
-		this.game.physics.arcade.overlap(this.shipBody, this.state.hero.weapon.bullets, this.hitHandler, null, this);
-		this.game.physics.arcade.overlap(this.shipBody, this.state.hero.shipBody, this.collisionHandler, null, this);
+		if(this.state.hero.active){
+			this.game.physics.arcade.overlap(this.state.hero.shipBody,this.weapon.bullets,this.weaponHitHandler,null,this);
+			this.game.physics.arcade.overlap(this.shipBody, this.state.hero.weapon.bullets, this.hitHandler, null, this);
+			this.game.physics.arcade.overlap(this.shipBody, this.state.hero.shipBody, this.collisionHandler, null, this);
+		}
 	}
 
 	moveToTarget(acceleration:number=null){
@@ -121,12 +123,15 @@ class EnemyBase extends SpaceShip{
 	}
 	weaponHitHandler(heroBody:Phaser.Sprite,bullet:Phaser.Sprite){
 		//console.log("HIT HERO")
+		
 		if(this.state.hero.life>=0){
 			this.state.hero.life=this.state.hero.life-this.damage;
 		}else{
 			this.state.hero.kill();
 		}
 		bullet.kill();
+
+		
 	}
 
 	hitHandler(enemy:Phaser.Sprite,bullet:Phaser.Sprite){

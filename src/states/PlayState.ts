@@ -42,13 +42,15 @@ class PlayState extends LoadableState{
 		this.bodys.y=0;
 		this.bodys.width=Game.globalWidth;
 		this.bodys.height=Game.globalHeight;
-		console.log(this.bodys);
+		
+		
 		this.hero=new HeroShip(this);
 		this.hero.x=Game.globalWidth/2;
 		this.hero.y=Game.globalHeight/2;
 		this.heroLayer.add(this.hero);
 		this.initTime=this.game.time.now;
-		
+		this.hero.init();
+
 		this.enemy=new Enemy05(this,0);
 		this.enemyLayer.addChild(this.enemy);
 		this.enemy.init();

@@ -22,6 +22,10 @@ class SpaceShip extends Phaser.Group{
 	}
 
 	update(){
-		if(this.toDestroy) this.destroy(true);
+		if(this.toDestroy){
+			this.shipBody.destroy();
+			this.destroy(true);
+			console.log("DESTROYING");
+		} 
 	}
 }
