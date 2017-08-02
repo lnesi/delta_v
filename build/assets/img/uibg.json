@@ -1,0 +1,20 @@
+{"frames": [
+
+{
+	"filename": "uibg.png",
+	"frame": {"x":0,"y":0,"w":60,"h":60},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":60},
+	"sourceSize": {"w":60,"h":60}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "uibg.png",
+	"format": "RGBA8888",
+	"size": {"w":60,"h":60},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:0024c7edd1ef2ec5eee124de0c656a0a:cddab78bf844a3fa0f638f45b820dfca:c5ea89ab1582ddf57797bd3cb1912562$"
+}
+}
