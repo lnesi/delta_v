@@ -16,6 +16,7 @@ class PlayState extends LoadableState{
 	preload(){
 		super.preload();
 		this.load.image('Background_01','assets/img/background_01.png');
+		this.load.image('uibg','assets/img/uibg.png');
 		this.load.atlasXML('mainsprite','assets/sprites/sheet.png','assets/sprites/sheet.xml');
 		this.load.spritesheet('explosion','assets/img/explosion.png',64,64);
 		this.load.atlasJSONArray('hero_ship_0','assets/sprites/hero_ship_0.png','assets/sprites/hero_ship_0.json');
@@ -26,10 +27,11 @@ class PlayState extends LoadableState{
 		this.load.image('hero_fire_bullet','assets/img/hero_fire_bullet.png');
 		this.load.audio('sfx_laser1',"assets/audio/sfx_laser1.ogg");
 		this.load.audio('sfx_explosion',"assets/audio/sfx_explosion.mp3");
-		this.game.load.bitmapFont('Roboto', 'assets/fonts/roboto_bold.png', 'assets/fonts/roboto_bold.xml');
+		this.game.load.bitmapFont('PT Mono', 'assets/fonts/ptmono.png', 'assets/fonts/ptmono.xml');
 	
 	}
 	create(){
+		super.create();
 		this.backgroundLayer=new Phaser.Group(this.game);
 		this.weaponsLayer=new Phaser.Group(this.game);
 		this.enemyLayer=new Phaser.Group(this.game);
@@ -54,8 +56,7 @@ class PlayState extends LoadableState{
 		this.enemyLayer.addChild(this.enemy);
 		this.enemy.init();
 
-		let bmpText = new Phaser.BitmapText(this.game,10,Game.globalHeight-50,'Roboto',"delta V",40);
-		this.foregroundLayer.add(bmpText);
+	
 
 		let interfase=new DisplayInterfase(this);
 		this.foregroundLayer.add(interfase);

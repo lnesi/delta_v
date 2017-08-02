@@ -1,14 +1,14 @@
 class Boot extends Phaser.State{
 	init(){
 		this.physics.startSystem(Phaser.Physics.ARCADE);
-		//this.scale.scaleMode=Phaser.ScaleManager.SHOW_ALL
+		this.scale.scaleMode=Phaser.ScaleManager.SHOW_ALL
 	}
 
 	preload(){
 		console.log("Boot: Preload");
 		
 		
-		this.load.image('preload_back', 'assets/img/darkPurple.png');
+		this.load.image('homescreen_bg', 'assets/img/homescreen_bg.png');
         this.load.image('preload_bar', 'assets/img/preload_bar.png');
         this.game.input.addPointer();
     	this.game.input.addPointer();
@@ -20,7 +20,7 @@ class Boot extends Phaser.State{
 	
 	create(){
 		console.log("Boot: Created");
-		this.game.state.start("PlayState");
+		this.game.state.start("LandingState");
 	}
 
 	update(){
