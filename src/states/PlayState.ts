@@ -7,12 +7,24 @@ class PlayState extends LoadableState{
 	public foregroundLayer:Phaser.Group
 	public enemy:EnemyBase
 	private background:Phaser.TileSprite;
-	public bodys:any
+	//public bodys:any
 	private initTime:number
 	public clock:number=0
 	private indexCount:number;
 	private allowKiller:boolean=true;
 	public score:number=0;
+	public lifes:number=3;
+	public interfase:DisplayInterfase;
+	init(){
+		super.init();
+		this.lifes=3;
+		this.score=0;
+		this.allowKiller=true;
+		this.indexCount=0;
+		this.clock=0;
+	
+	}
+	
 	preload(){
 		super.preload();
 		this.load.image('Background_01','assets/img/background_01.png');
@@ -39,11 +51,8 @@ class PlayState extends LoadableState{
 		this.foregroundLayer=new Phaser.Group(this.game);
 
 		var background=new SpaceBackground(this);
-		this.bodys=this.game.add.physicsGroup(Phaser.Physics.ARCADE);
-		this.bodys.x=0;
-		this.bodys.y=0;
-		this.bodys.width=Game.globalWidth;
-		this.bodys.height=Game.globalHeight;
+
+		
 		
 		
 		this.hero=new HeroShip(this);
@@ -58,8 +67,8 @@ class PlayState extends LoadableState{
 
 	
 
-		let interfase=new DisplayInterfase(this);
-		this.foregroundLayer.add(interfase);
+		this.interfase=new DisplayInterfase(this);
+		this.foregroundLayer.add(this.interfase);
 	}
 	getTime(){
 		this.clock++
@@ -122,9 +131,18 @@ class PlayState extends LoadableState{
 	}
 
 	collisionHandler(){
-		console.log("COLLISION");
+		console.log("COLLISION at play state");
 	}
-
+	onEnemyKilled(){
+		this.lifes--
+		if(this.lifes>=0){
+			this.interfase.updateLifes();
+			this.hero.reSpawn();
+		}else{
+			this.game.state.start("GameOverState");
+		}
+		
+	}
 	render(){
 		// this.game.debug.pointer(this.game.input.mousePointer);
 		// this.game.debug.pointer(this.game.input.pointer1);

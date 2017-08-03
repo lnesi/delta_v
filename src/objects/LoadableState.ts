@@ -3,12 +3,12 @@ class LoadableState extends Phaser.State{
 	preloadBackground:Phaser.Image
 	preloadBar:Phaser.Sprite;
 	ready:boolean=false
+	contentLayer:Phaser.Group
 	init(){
 		console.log("UBUT Main");
 		this.preloaderLayer=new Phaser.Group(this.game);
 
 		this.preloadBackground = new Phaser.Image(this.game,0,0,'homescreen_bg');
-		new Phaser.TileSprite(this.game,0,0,Game.globalWidth,Game.globalHeight,'preload_back');
 		this.preloadBar = new Phaser.Sprite(this.game,(Game.globalWidth/2)-150, (Game.globalHeight/2)-12,'preload_bar');
 
 	
@@ -22,7 +22,7 @@ class LoadableState extends Phaser.State{
 	}
 
 	create(){
-		console.log("STEATE LOADED");
+		this.contentLayer=new Phaser.Group(this.game);
 		this.preloadBar.destroy();
 	}
 	

@@ -166,7 +166,7 @@ class HeroShip extends SpaceShip {
 	        var explosion = new Phaser.Sprite(this.state.game, this.getX(), this.getY(), 'explosion');
 	        explosion.anchor.setTo(0.5, 0.5);
 	        explosion.animations.add('explosion');
-            explosion.animations.getAnimation('explosion').onComplete.add(this.reSpawn.bind(this));
+            explosion.animations.getAnimation('explosion').onComplete.add(this.state.onEnemyKilled.bind(this.state));
 	        explosion.animations.getAnimation('explosion').play(30, false, true);
 	        this.state.enemyLayer.add(explosion);
 	        this.shipBody.visible=false;
@@ -178,9 +178,8 @@ class HeroShip extends SpaceShip {
     }
 
     reSpawn(){
-        this.life=100;
-        setTimeout(function(){this.init()}.bind(this),500);
-        
+       this.life=100;
+       setTimeout(function(){this.init()}.bind(this),500);
     }
 
 

@@ -8,6 +8,7 @@ class Game extends Phaser.Game{
 		this.state.add('Boot',Boot,false);
 		this.state.add('PlayState',PlayState,false);
 		this.state.add('LandingState',LandingState,false);
+		this.state.add('GameOverState',GameOverState,false);
 		this.state.start("Boot");
 
 		

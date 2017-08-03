@@ -1,11 +1,11 @@
 class LandingState extends LoadableState{
-	contentLayer:Phaser.Group;
+	
 	listening:boolean=true;
 	preload(){
 		super.preload();
 		this.load.image('homescreen_logo','assets/img/homescreen_logo.png');
 		this.game.load.bitmapFont('PT Mono', 'assets/fonts/ptmono.png', 'assets/fonts/ptmono.xml');
-		this.contentLayer=new Phaser.Group(this.game);
+		
 	}
 	create(){
 		super.create();
