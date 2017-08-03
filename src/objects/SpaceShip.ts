@@ -1,7 +1,7 @@
 class SpaceShip extends Phaser.Group{
-	public state:Phaser.State;
+	public state:PlayState;
 	public shipBody:Phaser.Sprite;
-	public weapon:Weapon
+	
 	public toDestroy:boolean=false;
 	public deltaTime:number=0;
 	

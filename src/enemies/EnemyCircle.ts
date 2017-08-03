@@ -1,3 +1,4 @@
+/*
 ///<reference path="EnemyBase.ts"/>
 
 class EnemyCircle extends EnemyBase{
@@ -52,3 +53,4 @@ class EnemyCircle extends EnemyBase{
 
 	}
 }
+*/

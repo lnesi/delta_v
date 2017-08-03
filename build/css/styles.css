@@ -1,0 +1,11 @@
+body{
+	margin:0;
+}
+.spawner{
+    position: absolute;
+    right: 0;
+    padding: 20px;
+    font-family: arial;
+    background: #ccc;
+    font-size: 10px;
+}

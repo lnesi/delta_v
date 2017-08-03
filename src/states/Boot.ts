@@ -20,7 +20,7 @@ class Boot extends Phaser.State{
 	
 	create(){
 		console.log("Boot: Created");
-		this.game.state.start("LandingState");
+		this.game.state.start("PlayState");
 	}
 
 	update(){

@@ -15,6 +15,7 @@ class HeroShip extends SpaceShip {
     public direction: Phaser.Point = new Phaser.Point(0, 0);
     public acceleration: Phaser.Point = new Phaser.Point(0, 0);
     public active:boolean=false;
+    public weapon:Weapon;
     constructor(state: PlayState) {
         super(state.game);
 

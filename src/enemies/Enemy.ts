@@ -1,6 +1,9 @@
-///<reference path="../objects/SpaceShip.ts"/>
+class Enemy extends SpaceShip{
+	public static NORMAL:number=0;
+	public static KAMIKAZE:number=1;
+	public static SWAP:number=2;
+	public static SWEEP:number=3;
 
-class EnemyBase extends SpaceShip{
 	public offsetWidth:number=100;
 	public offsetHeight:number=100;
 	public state:PlayState
@@ -11,22 +14,34 @@ class EnemyBase extends SpaceShip{
 	public acceleration:number;
 	public maxSpeed:number;
 	public minSpeed:number;
-	public fireTime:number;
 	public on:boolean=false;
-	public target:Phaser.Point=new Phaser.Point(0,0);
+	public target:Phaser.Point;
 	public clock:number=0
 	public timeOffset:number=0;
-	public damage:number
-	public value:number;
-	constructor(state:PlayState,index:number,sprite_id:string,acceleration:number=null,fireTime:number=1000,maxSpeed:number=500,minSpeed:number=100,damage:number=1,value:number=10){
+	public scoreValue:number;
+	public weapon:EnemyWeapon
+	public type:number
+	public spawnChange:number=100;
+	public moveTracker:number=0;
+	
+	constructor(state:PlayState,index:number,sprite_id:string,type:number=null,acceleration:number=null,maxSpeed:number=500,minSpeed:number=100,scoreValue:number=10){
 		super(state.game);
 		this.state=state;
 		this.index=index;
-		this.damage=damage;
-		this.fireTime=fireTime;
+		
+	
 		this.maxSpeed=maxSpeed;
 		this.minSpeed=minSpeed;
-		this.value=value;
+		this.scoreValue=scoreValue;
+		
+		this.target=new Phaser.Point(Phaser.Math.between(this.offsetWidth,Game.globalWidth-this.offsetWidth),Game.globalHeight+this.offsetHeight);
+		
+		if(type){
+			this.type=type
+		}else{
+			this.type=Enemy.NORMAL;
+		}
+		
 		if(acceleration===null){
 			this.acceleration=Phaser.Math.between(this.minSpeed,this.maxSpeed);
 		}else{
@@ -47,34 +62,63 @@ class EnemyBase extends SpaceShip{
 		this.shipBody.body.bounce.y=0.5;
 		//this.shipBody.body.collideWorldBounds=true;
 		
+		
 
 	}
 
+	addWeapon(weapon:EnemyWeapon){
+		this.weapon=weapon;	
+	}
+
 	init(x:number=null,y:number=null){
+		if(!this.weapon) this.weapon=new EnemyWeapon(this,'enemy_fire_bullet',null);
 		if(x===null){
 			this.setX(Phaser.Math.between(this.offsetWidth,Game.globalWidth-this.offsetWidth));
 		}else{
 			this.setX(x);
 		}
+
 		if(y===null){
 			this.setY(-this.offsetHeight);
 		}else{
 			this.setY(y);
 		}
-		this.deltaTime=this.state.game.time.now+this.fireTime;
-		
+
+		this.deltaTime=this.state.game.time.now+1000;
 		this.on=true;
 
 	}
 
 	update(){
 		if(this.on && this.state.game.time.now>this.deltaTime){
+			
 			this.clock++;
-			this.moveToTarget();
+			switch(this.type){
+				case 1:
+					this.target=new Phaser.Point(this.state.hero.getX(),this.state.hero.getY());
+					this.moveToTarget();
+					this.lookAtHero();
+					break;
+				case 2:
+					if(this.clock%this.spawnChange==0){
+						if(this.target.x==0){
+							this.target.x=Game.globalWidth
+						}else{
+							this.target.x=0
+						}
+					}
+					this.moveToTarget();
+				case 3:
+					this.moveTracker+=0.01;
+					this.target.x=Math.sin(this.moveTracker)*Game.globalWidth;		
+				default:
+					this.moveToTarget();
+					break;
+
+			}
 			this.lookAtHero();
-			if(this.life>0)
-			 	this.checkCollision();
-			this.fire();
+			if(this.life>0) this.checkCollision();
+			this.weapon.fireAtSprite(this.state.hero.shipBody);
 			
 		}
 		super.update();
@@ -116,16 +160,12 @@ class EnemyBase extends SpaceShip{
 		this.shipBody.body.rotation=Math.atan2(aHero,bHero)*(-180 / Math.PI); 
 	}
 
-	fire(){
-		//this.deltaTime=this.state.game.time.now+this.fireTime;
-		if(this.state.game.time.now>this.deltaTime) this.weapon.fireAtSprite(this.state.hero.shipBody);
-		//this.weapon.sfx.play();
-	}
+	
 	weaponHitHandler(heroBody:Phaser.Sprite,bullet:Phaser.Sprite){
-		//console.log("HIT HERO")
+		
 		
 		if(this.state.hero.life>=0){
-			this.state.hero.life=this.state.hero.life-this.damage;
+			this.state.hero.life=this.state.hero.life-this.weapon.damage;
 		}else{
 			this.state.hero.kill();
 		}
@@ -137,7 +177,7 @@ class EnemyBase extends SpaceShip{
 	hitHandler(enemy:Phaser.Sprite,bullet:Phaser.Sprite){
 		//this.life=0;
 		bullet.kill();
-		this.state.score+=this.value;
+		this.state.score+=this.scoreValue;
 		this.explode();
 		//console.log("COLLISION bullet");
 	}
