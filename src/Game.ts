@@ -16,7 +16,7 @@ class Game extends Phaser.Game{
 		this.state.start("Boot");
 		this.leaderboard=new Leaderboard("leaderboard",this);
 	
-		console.log(this.firebase);
+	
 
 	}
 

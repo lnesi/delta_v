@@ -71,7 +71,6 @@ var Game = (function (_super) {
         _this.state.add('GameOverState', GameOverState, false);
         _this.state.start("Boot");
         _this.leaderboard = new Leaderboard("leaderboard", _this);
-        console.log(_this.firebase);
         return _this;
     }
     Game.prototype.applyMixins = function (derivedCtor, baseCtors) {
@@ -352,7 +351,7 @@ var Leaderboard = (function () {
             }
         }
         this.game.firebase.database();
-        this.game.firebase.database().ref().set({ "name": "luis", "score": 100 });
+        this.game.firebase.database().ref('/leaderboard').set({ "name": "luis", "score": 100 });
         this.table.style.display = "none";
         this.preloader.style.display = "none";
     }
