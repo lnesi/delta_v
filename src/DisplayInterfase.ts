@@ -58,7 +58,7 @@ class DisplayInterfase extends Phaser.Group{
 
 		 
 		}
-		this.setScore(this.state.score);
+		this.setScore(this.state.getGame().currentScore);
 		
 	}
 }

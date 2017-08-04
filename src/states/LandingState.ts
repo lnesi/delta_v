@@ -4,9 +4,9 @@ class LandingState extends LoadableState{
 	preload(){
 		super.preload();
 		this.load.image('homescreen_logo','assets/img/homescreen_logo.png');
-		this.game.load.bitmapFont('PT Mono', 'assets/fonts/ptmono.png', 'assets/fonts/ptmono.xml');
-		
+		this.game.load.bitmapFont('PT Mono', 'assets/fonts/ptmono.png', 'assets/fonts/ptmono.xml');	
 	}
+	
 	create(){
 		super.create();
 		let logo=new Phaser.Image(this.game,Game.globalWidth/2,Game.globalHeight/2,"homescreen_logo");

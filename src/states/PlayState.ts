@@ -12,14 +12,16 @@ class PlayState extends LoadableState{
 	public clock:number=0
 	private indexCount:number;
 	private allowKiller:boolean=true;
-	public score:number=0;
 	public lifes:number=3;
 	public interfase:DisplayInterfase;
-	
+	public levelData:any;
+	public enemyCollider:Phaser.Sprite
+	public autoCheck:any
 	init(){
 		super.init();
 		this.lifes=3;
-		this.score=0;
+		this.getGame().currentScore=0;
+		
 		this.allowKiller=true;
 		this.indexCount=0;
 		this.clock=0;
@@ -28,6 +30,7 @@ class PlayState extends LoadableState{
 	
 	preload(){
 		super.preload();
+		this.load.json('levelData',"data/level.json");
 		this.load.image('Background_01','assets/img/background_01.png');
 		this.load.image('uibg','assets/img/uibg.png');
 		this.load.atlasXML('mainsprite','assets/sprites/sheet.png','assets/sprites/sheet.xml');
@@ -41,10 +44,15 @@ class PlayState extends LoadableState{
 		this.load.audio('sfx_laser1',"assets/audio/sfx_laser1.ogg");
 		this.load.audio('sfx_explosion',"assets/audio/sfx_explosion.mp3");
 		this.game.load.bitmapFont('PT Mono', 'assets/fonts/ptmono.png', 'assets/fonts/ptmono.xml');
+		
 	
 	}
 	create(){
 		super.create();
+
+		this.autoCheck=document.getElementById("autospawn");
+
+		this.levelData=this.game.cache.getJSON('levelData');
 		this.backgroundLayer=new Phaser.Group(this.game);
 		this.weaponsLayer=new Phaser.Group(this.game);
 		this.enemyLayer=new Phaser.Group(this.game);
@@ -53,9 +61,15 @@ class PlayState extends LoadableState{
 
 		var background=new SpaceBackground(this);
 
+		this.enemyCollider=new Phaser.Sprite(this.game,0,Game.globalHeight+(Enemy.offsetHeight/2));
+		this.physics.enable(this.enemyCollider,Phaser.Physics.ARCADE);
+		this.enemyCollider.body.setSize(Game.globalWidth*2,10,0,0);
+	
+		this.enemyCollider.x=-Game.globalWidth/2;
+
+		this.enemyLayer.add(this.enemyCollider);
 		
-		
-		
+		console.log("DATA OK:",this.levelData);
 		this.hero=new HeroShip(this);
 	
 		this.heroLayer.add(this.hero);
@@ -74,6 +88,8 @@ class PlayState extends LoadableState{
 
 		this.interfase=new DisplayInterfase(this);
 		this.foregroundLayer.add(this.interfase);
+
+		 
 	}
 
 	spawn(){
@@ -86,8 +102,10 @@ class PlayState extends LoadableState{
 		let damage:any=<any>document.getElementById("damage");
 		let firerate:any=<any>document.getElementById("firerate");
 		let aitype:any=<any>document.getElementById("aitype");
+		let acceleration:any=<any>document.getElementById("acceleration");
+		let score:any=<any>document.getElementById("score");
 		console.log("AI",parseInt(aitype.value));
-		let e=new Enemy(this,1,textureSelect.value,parseInt(aitype.value));
+		let e=new Enemy(this,textureSelect.value,parseInt(aitype.value),parseInt(acceleration.value),parseInt(score.value));
 		e.addWeapon(new EnemyWeapon(e,"enemy_fire_bullet",parseInt(firerate.value),parseInt(bullets.value),parseInt(charger.value),parseInt(reload.value),parseInt(damage.value)));
 		this.enemyLayer.addChild(e);
 		e.init();
@@ -102,55 +120,39 @@ class PlayState extends LoadableState{
 	}
 	update(){
 		this.clock++;
-		
+		if(this.levelData.timeline[this.clock]){
+			switch(this.levelData.timeline[this.clock].event){
+				case 0:
+					this.spawnScriptedEnemey(this.levelData.timeline[this.clock]);
+					break;
+			}
+			
+		}
 		
 		//this.game.physics.arcade.collide(this.bodys);
+
+		if(this.autoCheck.checked) this.spawner();
+	}
 	
-		//this.spawner();
-		
+	spawnScriptedEnemey(data:any){
+
+		let e=new Enemy(this,data.texture,data.type,data.acceleration,data.scoreValue);
+		new EnemyWeapon(e,"enemy_fire_bullet",data.fireRate,data.bulletsCount,data.fireLimit,data.reloadTime,data.weaponDamege);
+		this.enemyLayer.addChild(e);
+		e.init();
 	}
 
 	spawner(){
-		// if((this.clock%200)==0){
-		// 	this.indexCount++;
-		// 	console.log("SPAWN Enemy02");
-		// 	let enemy=new Enemy02(this,this.indexCount);
-		// 	this.enemyLayer.addChild(enemy);
-		// 	enemy.init();
-		// }
-
-		// if((this.clock%300)==0){
-		// 	this.indexCount++;
-		// 	console.log("SPAWN Enemy03");
-		// 	let enemy=new Enemy03(this,this.indexCount);
-		// 	this.enemyLayer.addChild(enemy);
-		// 	enemy.init();
-		// }
-
-		// if((this.clock%=400)==0){
-		// 	this.indexCount++;
-		// 	console.log("SPAWN Enemy04");
-		// 	let enemy=new Enemy04(this,this.indexCount);
-		// 	this.enemyLayer.addChild(enemy);
-		// 	enemy.init();
-		// }
-
-		// if((this.clock%500)==0){
-		// 	this.indexCount++
-		// 	console.log("SPAWN Enemy01");
-		// 	let enemy=new Enemy01(this,this.indexCount);
-		// 	this.enemyLayer.addChild(enemy);
-		// 	enemy.init();
-		// }
+		if((this.clock%100)==0){
+			let texture=Enemy.TEXTURES[Phaser.Math.between(0,Enemy.TEXTURES.length-1)];
+			let type=Enemy.AIs[Phaser.Math.between(0,Enemy.AIs.length-1)];
+			let enemy=new Enemy(this,texture,type);
+			new EnemyWeapon(enemy,"enemy_fire_bullet");
+			this.enemyLayer.addChild(enemy);
+			enemy.init();
+		}
 	}
-	// spawnKiller(){
-	// 	if(this.allowKiller){
-	// 		let enemy=new Enemy05(this,0);
-	// 		this.enemyLayer.addChild(enemy);
-	// 		enemy.init();
-	// 	}
 	
-	// }
 
 	collisionHandler(){
 		console.log("COLLISION at play state");
@@ -166,14 +168,23 @@ class PlayState extends LoadableState{
 		
 	}
 	render(){
+		this.game.debug.text("FPS:"+this.game.time.fps.toString(), 2, 14, "#00ff00");
+		this.game.debug.text("CLOCK:"+this.clock, 2, 30, "#00ff00");
 		// this.game.debug.pointer(this.game.input.mousePointer);
 		// this.game.debug.pointer(this.game.input.pointer1);
   //   	this.game.debug.pointer(this.game.input.pointer2);
-		//this.game.debug.body(this.hero.shipBody);
+		//this.game.debug.body(this.enemyCollider);
 		//this.game.debug.body(this.enemy1.shipBody);
 		//this.game.debug.body(this.enemy2.shipBody);
 		
 		//this.game.debug.bodyInfo(this.hero.shipBody,10,10);
+	}
+	goFullScreen() {
+	    if (this.game.scale.isFullScreen){
+	        this.game.scale.stopFullScreen();
+	    }else{
+	        this.game.scale.startFullScreen(false);
+	    }
 	}
 }
 

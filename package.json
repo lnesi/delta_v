@@ -23,5 +23,8 @@
     "gulp": "^3.9.1",
     "gulp-webserver": "^0.9.1",
     "phaser": "^2.6.2"
+  },
+  "dependencies": {
+    "gsap": "^1.20.2"
   }
 }

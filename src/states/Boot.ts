@@ -1,9 +1,14 @@
 class Boot extends Phaser.State{
 	init(){
 		this.physics.startSystem(Phaser.Physics.ARCADE);
-		this.scale.scaleMode=Phaser.ScaleManager.SHOW_ALL
+		this.scale.scaleMode=Phaser.ScaleManager.SHOW_ALL;
+		this.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
+		this.scale.onSizeChange.add(this.sizeChange);
 	}
-
+	sizeChange(){
+		document.getElementById("leaderboard").style.width=document.getElementsByTagName("canvas")[0].clientWidth+"px";
+		document.getElementById("leaderboard").style.height=document.getElementsByTagName("canvas")[0].clientHeight+"px";
+	}
 	preload(){
 		console.log("Boot: Preload");
 		
@@ -21,6 +26,8 @@ class Boot extends Phaser.State{
 	create(){
 		console.log("Boot: Created");
 		this.game.state.start("PlayState");
+		this.game.time.advancedTiming=true;
+		
 	}
 
 	update(){

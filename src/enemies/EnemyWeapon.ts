@@ -5,9 +5,9 @@ class EnemyWeapon extends Phaser.Weapon{
 	public damage:number
 	public reloadTime:number;
 	public fireTime:number;
-	constructor(ship:SpaceShip,textureID:string,fireRate:number=null,bulletsCount:number=10,fireLimit:number=10,reloadTime:number=2000,damage:number=1,offset:Phaser.Point=null){
+	constructor(ship:Enemy,textureID:string,fireRate:number=null,bulletsCount:number=10,fireLimit:number=10,reloadTime:number=2000,damage:number=1,offset:Phaser.Point=null){
 		super(ship.state.game,ship.state.game.plugins);
-		console.log(fireRate,bulletsCount,fireLimit,reloadTime,damage);
+		
 		this.damage=damage;
 		this.reloadTime=reloadTime
 		if(offset){
@@ -39,10 +39,10 @@ class EnemyWeapon extends Phaser.Weapon{
 	
 
 		this.trackSprite(ship.shipBody,this.emiterOffset.x,this.emiterOffset.y);
+		ship.addWeapon(this);
 	}
 	reload(){
 		setTimeout(function(){
-			console.log("RELOAD",this.fireLimit)
 			this.resetShots();
 		}.bind(this),this.reloadTime);
 	}
