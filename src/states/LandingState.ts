@@ -19,6 +19,8 @@ class LandingState extends LoadableState{
 		let tween:Phaser.Tween=this.game.add.tween(bmpText);
 		tween.to({alpha: 0.2},500,"Linear",true,0,-1,true);
 		this.contentLayer.add(bmpText);
+		
+
 	}
 
 	update(){
@@ -31,6 +33,7 @@ class LandingState extends LoadableState{
 	capturePointer(pointer:Phaser.Pointer){
 		if(pointer.isDown){
 			this.listening=false;
+
 			this.game.state.start("PlayState");
 		}
 	}

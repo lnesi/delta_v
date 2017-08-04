@@ -4,11 +4,14 @@
         "module": "system",
         "outFile": "build/js/main.js",
         "sourceMap": true,
-        "noImplicitAny": true
+        "noImplicitAny": true,
+        "allowSyntheticDefaultImports": true 
     },
     "include": [
         "src/**/*",
-        "node_modules/phaser/typescript/phaser.comments.d.ts"
+        "node_modules/phaser/typescript/phaser.comments.d.ts",
+        "node_modules/@types/gsap/Tween.d.ts",
+        "node_modules/@type/firebase/index.d.ts"
     ],
     "exclude": [
         "**/*.spec.ts"

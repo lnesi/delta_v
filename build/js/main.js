@@ -61,14 +61,17 @@ var DisplayInterfase = (function (_super) {
 }(Phaser.Group));
 var Game = (function (_super) {
     __extends(Game, _super);
-    function Game() {
+    function Game(firebase) {
         var _this = _super.call(this, Game.globalWidth, Game.globalHeight, Phaser.CANVAS) || this;
         _this.currentScore = 0;
+        _this.firebase = firebase;
         _this.state.add('Boot', Boot, false);
         _this.state.add('PlayState', PlayState, false);
         _this.state.add('LandingState', LandingState, false);
         _this.state.add('GameOverState', GameOverState, false);
         _this.state.start("Boot");
+        _this.leaderboard = new Leaderboard("leaderboard", _this);
+        console.log(_this.firebase);
         return _this;
     }
     Game.prototype.applyMixins = function (derivedCtor, baseCtors) {
@@ -334,6 +337,38 @@ var HeroShip = (function (_super) {
     };
     return HeroShip;
 }(SpaceShip));
+var Leaderboard = (function () {
+    function Leaderboard(elementId, game) {
+        this.html = document.getElementById(elementId);
+        this.game = game;
+        for (var i = 0; i < this.html.childNodes.length; i++) {
+            var e = this.html.childNodes[i];
+            if (e.className == "preloader") {
+                this.preloader = e;
+            }
+            ;
+            if (e.className == "tableHolder") {
+                this.table = e;
+            }
+        }
+        this.game.firebase.database();
+        this.game.firebase.database().ref().set({ "name": "luis", "score": 100 });
+        this.table.style.display = "none";
+        this.preloader.style.display = "none";
+    }
+    Leaderboard.prototype.show = function () {
+        this.table.style.display = "none";
+        this.preloader.style.display = "block";
+        this.html.style.display = "block";
+        gsap.TweenMax.to(this.html, 1, { "opacity": 1 });
+    };
+    Leaderboard.prototype.hide = function () {
+        gsap.TweenMax.to(this.html, 1, { "opacity": 0, onComplete: function () {
+                this.html.style.display = "none";
+            }.bind(this) });
+    };
+    return Leaderboard;
+}());
 var SpaceBackground = (function (_super) {
     __extends(SpaceBackground, _super);
     function SpaceBackground(state) {
