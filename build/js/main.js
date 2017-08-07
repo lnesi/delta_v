@@ -403,7 +403,7 @@ var SpaceBackground = (function (_super) {
         _this.state = state;
         _this.ts = new Phaser.TileSprite(state.game, 0, 0, Game.globalWidth, Game.globalHeight, 'Background_01');
         _this.addChild(_this.ts);
-        _this.addChild(new BackgroundBlock(_this.state.getGame()));
+        new BackgroundBlock(_this.state.getGame());
         return _this;
     }
     SpaceBackground.prototype.update = function () {
@@ -716,15 +716,14 @@ var BackgroundBlock = (function (_super) {
         var filas = Math.ceil(game.globalHeight() / _this.blockHeight);
         for (var i = 0; i < columns; i++) {
             for (var j = 0; j < filas; j++) {
-                var s = new Phaser.Sprite(game, _this.blockWidth * i, _this.blockHeight * j, 'back_sprite_01', "0" + Phaser.Math.between(1, 6) + ".png");
+                var s = new Phaser.Sprite(game, _this.blockWidth * i, (_this.blockHeight * j), 'back_sprite_01', "0" + Phaser.Math.between(1, 6) + ".png");
                 _this.addChild(s);
             }
         }
         return _this;
     }
     BackgroundBlock.prototype.update = function () {
-        if (this.on) {
-        }
+        this.y += 1;
     };
     return BackgroundBlock;
 }(Phaser.Group));

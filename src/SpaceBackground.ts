@@ -13,8 +13,8 @@ class SpaceBackground extends Phaser.Group{
 		this.ts=new Phaser.TileSprite(state.game,0,0,Game.globalWidth,Game.globalHeight,'Background_01');
 		this.addChild(this.ts);
 		
+		new BackgroundBlock(this.state.getGame());
 		
-		this.addChild(new BackgroundBlock(this.state.getGame()));
 
 
 	}
@@ -23,6 +23,7 @@ class SpaceBackground extends Phaser.Group{
 	
 	update(){
 		this.ts.tilePosition.y += 1;
+
 	}
 
 }
