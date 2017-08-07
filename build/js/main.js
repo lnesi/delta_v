@@ -348,36 +348,48 @@ var HeroShip = (function (_super) {
     };
     return HeroShip;
 }(SpaceShip));
-var Leaderboard = (function () {
-    function Leaderboard(elementId, game) {
+var HTMLScreen = (function () {
+    function HTMLScreen(elementId, game) {
         this.html = document.getElementById(elementId);
         this.game = game;
-        for (var i = 0; i < this.html.childNodes.length; i++) {
-            var e = this.html.childNodes[i];
-            if (e.className == "preloader") {
-                this.preloader = e;
-            }
-            ;
-            if (e.className == "tableHolder") {
-                this.table = e;
-            }
-        }
-        this.table.style.display = "none";
-        this.preloader.style.display = "none";
     }
-    Leaderboard.prototype.show = function () {
-        this.table.style.display = "none";
-        this.preloader.style.display = "block";
+    HTMLScreen.prototype.show = function () {
         this.html.style.display = "block";
         gsap.TweenMax.to(this.html, 1, { "opacity": 1 });
     };
-    Leaderboard.prototype.hide = function () {
+    HTMLScreen.prototype.hide = function () {
         gsap.TweenMax.to(this.html, 1, { "opacity": 0, onComplete: function () {
                 this.html.style.display = "none";
             }.bind(this) });
     };
-    return Leaderboard;
+    return HTMLScreen;
 }());
+///<reference path="objects/HTMLScreen.ts"/>
+var Leaderboard = (function (_super) {
+    __extends(Leaderboard, _super);
+    function Leaderboard(elementId, game) {
+        var _this = _super.call(this, elementId, game) || this;
+        for (var i = 0; i < _this.html.childNodes.length; i++) {
+            var e = _this.html.childNodes[i];
+            if (e.className == "preloader") {
+                _this.preloader = e;
+            }
+            ;
+            if (e.className == "tableHolder") {
+                _this.table = e;
+            }
+        }
+        _this.table.style.display = "none";
+        _this.preloader.style.display = "none";
+        return _this;
+    }
+    Leaderboard.prototype.show = function () {
+        this.table.style.display = "none";
+        this.preloader.style.display = "block";
+        _super.prototype.show.call(this);
+    };
+    return Leaderboard;
+}(HTMLScreen));
 var SpaceBackground = (function (_super) {
     __extends(SpaceBackground, _super);
     function SpaceBackground(state) {

@@ -1,11 +1,13 @@
-class Leaderboard{
-	html:HTMLElement;
+///<reference path="objects/HTMLScreen.ts"/>
+
+class Leaderboard extends HTMLScreen{
+	
 	preloader:HTMLElement;
 	table:HTMLElement;
-	game:Game
+	
 	constructor(elementId:string,game:Game){
-		this.html=document.getElementById(elementId);
-		this.game=game;
+		super(elementId,game);
+		
 		for (var i = 0; i < this.html.childNodes.length; i++) {
 			let e:any=this.html.childNodes[i];
 			if(e.className=="preloader"){
@@ -23,15 +25,10 @@ class Leaderboard{
 	public show(){
 		this.table.style.display="none";
 		this.preloader.style.display="block";
-		this.html.style.display="block";
-		gsap.TweenMax.to(this.html,1,<gsap.TweenConfig>{"opacity":1});
+		super.show();
 
 
 	}
 
-	public hide(){
-		gsap.TweenMax.to(this.html,1,<gsap.TweenConfig>{"opacity":0,onComplete:function(){
-			this.html.style.display="none";
-		}.bind(this)});
-	}
+	
 }

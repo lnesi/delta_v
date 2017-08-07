@@ -5,7 +5,7 @@ class Game extends Phaser.Game{
 	public hero:HeroShip;
 	public currentScore:number=0;
 	public leaderboard:any;
-	public firebase:any;
+	public firebase:Firebase;
 	public user:any=null;
 	constructor(firebase:any){
 		super(Game.globalWidth,Game.globalHeight, Phaser.CANVAS);
@@ -32,6 +32,9 @@ class Game extends Phaser.Game{
 		  }
 		  // ...
 		}.bind(this));
+
+	
+
 
 	}
 

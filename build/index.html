@@ -7,8 +7,9 @@
 	<link rel="stylesheet" type="text/css" href="css/styles.css">
 	<script src="js/vendor/phaser.min.js"></script>
 	<script src="js/vendor/gsap/TweenMax.min.js"></script>
+	<script src="js/vendor/firebase.js"></script>
+	<script src="js/vendor/handlebars.min.js"></script>
 	<script src="js/main.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
 </head>
 <body> 
 	<script>
@@ -102,8 +103,6 @@
 	</div>
 <script>
 	var _app;
-	gsap={}
-	gsap.TweenMax=TweenMax;
 	window.onload = function() {
 		_app=new Game(firebase);
 		
