@@ -89,6 +89,12 @@ var Game = (function (_super) {
         }.bind(_this));
         return _this;
     }
+    Game.prototype.globalWidth = function () {
+        return Game.globalWidth;
+    };
+    Game.prototype.globalHeight = function () {
+        return Game.globalHeight;
+    };
     Game.prototype.applyMixins = function (derivedCtor, baseCtors) {
         baseCtors.forEach(function (baseCtor) {
             Object.getOwnPropertyNames(baseCtor.prototype).forEach(function (name) {
@@ -393,15 +399,18 @@ var Leaderboard = (function (_super) {
 var SpaceBackground = (function (_super) {
     __extends(SpaceBackground, _super);
     function SpaceBackground(state) {
-        var _this = _super.call(this, state.game, 0, 0, Game.globalWidth, Game.globalHeight, 'Background_01') || this;
-        state.backgroundLayer.addChild(_this);
+        var _this = _super.call(this, state.game) || this;
+        _this.state = state;
+        _this.ts = new Phaser.TileSprite(state.game, 0, 0, Game.globalWidth, Game.globalHeight, 'Background_01');
+        _this.addChild(_this.ts);
+        _this.addChild(new BackgroundBlock(_this.state.getGame()));
         return _this;
     }
     SpaceBackground.prototype.update = function () {
-        this.tilePosition.y += 1;
+        this.ts.tilePosition.y += 1;
     };
     return SpaceBackground;
-}(Phaser.TileSprite));
+}(Phaser.Group));
 var Enemy = (function (_super) {
     __extends(Enemy, _super);
     function Enemy(state, sprite_id, type, acceleration, scoreValue, maxSpeed, minSpeed) {
@@ -696,6 +705,29 @@ var EnemyWeapon = (function (_super) {
     };
     return EnemyWeapon;
 }(Phaser.Weapon));
+var BackgroundBlock = (function (_super) {
+    __extends(BackgroundBlock, _super);
+    function BackgroundBlock(game) {
+        var _this = _super.call(this, game) || this;
+        _this.on = false;
+        _this.blockWidth = 64;
+        _this.blockHeight = 64;
+        var columns = Math.ceil(game.globalWidth() / _this.blockWidth);
+        var filas = Math.ceil(game.globalHeight() / _this.blockHeight);
+        for (var i = 0; i < columns; i++) {
+            for (var j = 0; j < filas; j++) {
+                var s = new Phaser.Sprite(game, _this.blockWidth * i, _this.blockHeight * j, 'back_sprite_01', "0" + Phaser.Math.between(1, 6) + ".png");
+                _this.addChild(s);
+            }
+        }
+        return _this;
+    }
+    BackgroundBlock.prototype.update = function () {
+        if (this.on) {
+        }
+    };
+    return BackgroundBlock;
+}(Phaser.Group));
 var LoadableState = (function (_super) {
     __extends(LoadableState, _super);
     function LoadableState() {
@@ -845,7 +877,8 @@ var PlayState = (function (_super) {
     PlayState.prototype.preload = function () {
         _super.prototype.preload.call(this);
         this.load.json('levelData', "data/level.json");
-        this.load.image('Background_01', 'assets/img/background_01.png');
+        this.load.image('Background_01', 'assets/img/background_01_0.png');
+        this.load.atlasJSONArray('back_sprite_01', 'assets/sprites/background_01.png', 'assets/sprites/background_01.json');
         this.load.image('uibg', 'assets/img/uibg.png');
         this.load.atlasXML('mainsprite', 'assets/sprites/sheet.png', 'assets/sprites/sheet.xml');
         this.load.spritesheet('explosion', 'assets/img/explosion.png', 100, 100);
@@ -863,12 +896,11 @@ var PlayState = (function (_super) {
         _super.prototype.create.call(this);
         this.autoCheck = document.getElementById("autospawn");
         this.levelData = this.game.cache.getJSON('levelData');
-        this.backgroundLayer = new Phaser.Group(this.game);
+        this.backgroundLayer = new SpaceBackground(this);
         this.weaponsLayer = new Phaser.Group(this.game);
         this.enemyLayer = new Phaser.Group(this.game);
         this.heroLayer = new Phaser.Group(this.game);
         this.foregroundLayer = new Phaser.Group(this.game);
-        var background = new SpaceBackground(this);
         this.enemyCollider = new Phaser.Sprite(this.game, 0, Game.globalHeight + (Enemy.offsetHeight / 2));
         this.physics.enable(this.enemyCollider, Phaser.Physics.ARCADE);
         this.enemyCollider.body.setSize(Game.globalWidth * 2, 10, 0, 0);

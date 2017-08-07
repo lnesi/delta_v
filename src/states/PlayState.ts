@@ -6,7 +6,6 @@ class PlayState extends LoadableState{
 	public heroLayer:Phaser.Group
 	public foregroundLayer:Phaser.Group
 	public enemy:Enemy
-	private background:Phaser.TileSprite;
 	//public bodys:any
 	private initTime:number
 	public clock:number=0
@@ -31,7 +30,8 @@ class PlayState extends LoadableState{
 	preload(){
 		super.preload();
 		this.load.json('levelData',"data/level.json");
-		this.load.image('Background_01','assets/img/background_01.png');
+		this.load.image('Background_01','assets/img/background_01_0.png');
+		this.load.atlasJSONArray('back_sprite_01','assets/sprites/background_01.png','assets/sprites/background_01.json');
 		this.load.image('uibg','assets/img/uibg.png');
 		this.load.atlasXML('mainsprite','assets/sprites/sheet.png','assets/sprites/sheet.xml');
 		this.load.spritesheet('explosion','assets/img/explosion.png',100,100);
@@ -53,13 +53,13 @@ class PlayState extends LoadableState{
 		this.autoCheck=document.getElementById("autospawn");
 
 		this.levelData=this.game.cache.getJSON('levelData');
-		this.backgroundLayer=new Phaser.Group(this.game);
+		this.backgroundLayer=new SpaceBackground(this);
 		this.weaponsLayer=new Phaser.Group(this.game);
 		this.enemyLayer=new Phaser.Group(this.game);
 		this.heroLayer=new Phaser.Group(this.game);
 		this.foregroundLayer=new Phaser.Group(this.game);
 
-		var background=new SpaceBackground(this);
+		
 
 		this.enemyCollider=new Phaser.Sprite(this.game,0,Game.globalHeight+(Enemy.offsetHeight/2));
 		this.physics.enable(this.enemyCollider,Phaser.Physics.ARCADE);

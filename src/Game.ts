@@ -5,7 +5,7 @@ class Game extends Phaser.Game{
 	public hero:HeroShip;
 	public currentScore:number=0;
 	public leaderboard:any;
-	public firebase:Firebase;
+	public firebase:any;
 	public user:any=null;
 	constructor(firebase:any){
 		super(Game.globalWidth,Game.globalHeight, Phaser.CANVAS);
@@ -37,9 +37,13 @@ class Game extends Phaser.Game{
 
 
 	}
-
 	
-
+	globalWidth(){
+		return Game.globalWidth;
+	}
+	globalHeight(){
+		return Game.globalHeight;
+	}
 	applyMixins(derivedCtor: any, baseCtors: any[]) {
 	    baseCtors.forEach(baseCtor => {
 	        Object.getOwnPropertyNames(baseCtor.prototype).forEach(name => {
@@ -53,3 +57,4 @@ class Game extends Phaser.Game{
 	
 
 }
+
