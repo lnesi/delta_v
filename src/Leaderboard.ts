@@ -15,8 +15,7 @@ class Leaderboard{
 				this.table=e;
 			}
 		}
-		this.game.firebase.database();
-		this.game.firebase.database().ref('/leaderboard').set({"name":"luis","score":100});
+		
 		this.table.style.display="none";
 		this.preloader.style.display="none";
 	}

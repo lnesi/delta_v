@@ -35,8 +35,7 @@ class PlayState extends LoadableState{
 		this.load.image('uibg','assets/img/uibg.png');
 		this.load.atlasXML('mainsprite','assets/sprites/sheet.png','assets/sprites/sheet.xml');
 		this.load.spritesheet('explosion','assets/img/explosion.png',100,100);
-		this.load.spritesheet('hero_ship_explosion','assets/img/hero_ship_explosion.png',80,100);
-		this.load.atlasJSONArray('hero_ship_0','assets/sprites/hero_ship_0.png','assets/sprites/hero_ship_0.json');
+		this.load.atlasJSONArray('hero','assets/sprites/hero.png','assets/sprites/hero.json');
 		this.load.atlasJSONArray('enemy_01','assets/sprites/enemy_01.png','assets/sprites/enemy_01.json');
 		this.load.atlasJSONArray('enemy_02','assets/sprites/enemy_02.png','assets/sprites/enemy_02.json');
 		this.load.atlasJSONArray('enemy_03','assets/sprites/enemy_03.png','assets/sprites/enemy_03.json');
@@ -121,18 +120,18 @@ class PlayState extends LoadableState{
 	}
 	update(){
 		this.clock++;
-		if(this.levelData.timeline[this.clock]){
-			switch(this.levelData.timeline[this.clock].event){
-				case 0:
-					this.spawnScriptedEnemey(this.levelData.timeline[this.clock]);
-					break;
-			}
+		// if(this.levelData.timeline[this.clock]){
+		// 	switch(this.levelData.timeline[this.clock].event){
+		// 		case 0:
+		// 			this.spawnScriptedEnemey(this.levelData.timeline[this.clock]);
+		// 			break;
+		// 	}
 			
-		}
+		// }
 		
 		//this.game.physics.arcade.collide(this.bodys);
 
-		if(this.autoCheck.checked) this.spawner();
+		//if(this.autoCheck.checked) this.spawner();
 	}
 	
 	spawnScriptedEnemey(data:any){
@@ -158,7 +157,7 @@ class PlayState extends LoadableState{
 	collisionHandler(){
 		console.log("COLLISION at play state");
 	}
-	onEnemyKilled(){
+	onHeroKilled(){
 		this.lifes--
 		if(this.lifes>=0){
 			this.interfase.updateLifes();

@@ -64,6 +64,7 @@ var Game = (function (_super) {
     function Game(firebase) {
         var _this = _super.call(this, Game.globalWidth, Game.globalHeight, Phaser.CANVAS) || this;
         _this.currentScore = 0;
+        _this.user = null;
         _this.firebase = firebase;
         _this.state.add('Boot', Boot, false);
         _this.state.add('PlayState', PlayState, false);
@@ -71,6 +72,21 @@ var Game = (function (_super) {
         _this.state.add('GameOverState', GameOverState, false);
         _this.state.start("Boot");
         _this.leaderboard = new Leaderboard("leaderboard", _this);
+        firebase.auth().signInAnonymously()["catch"](function (error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // ...
+        });
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                this.user = user;
+                console.log(this.user);
+            }
+            else {
+            }
+            // ...
+        }.bind(_this));
         return _this;
     }
     Game.prototype.applyMixins = function (derivedCtor, baseCtors) {
@@ -184,7 +200,7 @@ var HeroShip = (function (_super) {
         _this.acceleration = new Phaser.Point(0, 0);
         _this.active = false;
         _this.state = state;
-        _this.shipBody = new Phaser.Sprite(state.game, 0, 0, "hero_ship_0");
+        _this.shipBody = new Phaser.Sprite(state.game, 0, 0, "hero");
         _this.shipBody.animations.add('stand', Phaser.Animation.generateFrameNames('hero_stand_', 0, 5, '.png', 4), 24, true);
         _this.shipBody.animations.add('left', Phaser.Animation.generateFrameNames('hero_left_', 0, 5, '.png', 4), 24, false);
         _this.shipBody.animations.add('right', Phaser.Animation.generateFrameNames('hero_right_', 0, 5, '.png', 4), 24, false);
@@ -195,6 +211,8 @@ var HeroShip = (function (_super) {
         _this.shipBody.animations.add('fire_down', Phaser.Animation.generateFrameNames('hero_fire_stand_', 0, 2, '.png', 4), 24, false);
         _this.shipBody.animations.add('fire_left', Phaser.Animation.generateFrameNames('hero_fire_left_', 0, 2, '.png', 4), 24, false);
         _this.shipBody.animations.add('fire_right', Phaser.Animation.generateFrameNames('hero_fire_right_', 0, 2, '.png', 4), 24, false);
+        _this.shipBody.animations.add('explosion', Phaser.Animation.generateFrameNames('hero_explosion_', 0, 15, '.png', 4), 24, false);
+        _this.shipBody.animations.getAnimation("explosion").onComplete.add(_this.state.onHeroKilled.bind(_this.state));
         _this.shipBody.animations.getAnimation("fire_stand").onComplete.add(_this.gunFire.bind(_this));
         _this.shipBody.animations.getAnimation("fire_up").onComplete.add(_this.gunFire.bind(_this));
         _this.shipBody.animations.getAnimation("fire_down").onComplete.add(_this.gunFire.bind(_this));
@@ -271,7 +289,6 @@ var HeroShip = (function (_super) {
             this.shipBody.body.acceleration.y = this.acceleration.y;
         }
         else {
-            this.animate("stand");
             this.shipBody.body.acceleration.x = 0;
             this.shipBody.body.acceleration.y = 0;
         }
@@ -299,13 +316,7 @@ var HeroShip = (function (_super) {
             this.active = false;
             var sfx = new Phaser.Sound(this.state.game, 'sfx_explosion', 1);
             //sfx.play();
-            var explosion = new Phaser.Sprite(this.state.game, this.getX(), this.getY(), 'hero_ship_explosion');
-            explosion.anchor.setTo(0.5, 0.5);
-            explosion.animations.add('hero_ship_explosion');
-            explosion.animations.getAnimation('hero_ship_explosion').onComplete.add(this.state.onEnemyKilled.bind(this.state));
-            explosion.animations.getAnimation('hero_ship_explosion').play(30, false, true);
-            this.state.enemyLayer.add(explosion);
-            this.shipBody.visible = false;
+            this.animate('explosion');
         }
     };
     HeroShip.prototype.reSpawn = function () {
@@ -313,6 +324,7 @@ var HeroShip = (function (_super) {
         setTimeout(function () { this.init(); }.bind(this), 500);
     };
     HeroShip.prototype.init = function () {
+        this.animate("stand");
         this.shipBody.visible = true;
         this.shipBody.x = Game.globalWidth / 2;
         this.shipBody.y = Game.globalHeight + 200;
@@ -350,8 +362,6 @@ var Leaderboard = (function () {
                 this.table = e;
             }
         }
-        this.game.firebase.database();
-        this.game.firebase.database().ref('/leaderboard').set({ "name": "luis", "score": 100 });
         this.table.style.display = "none";
         this.preloader.style.display = "none";
     }
@@ -421,8 +431,12 @@ var Enemy = (function (_super) {
         _this.addChild(_this.shipBody);
         _this.shipBody.body.bounce.x = 0.5;
         _this.shipBody.body.bounce.y = 0.5;
-        return _this;
         //this.shipBody.body.collideWorldBounds=true;
+        _this.shipBody.animations.add('stand', ['enemy_stand_0001.png'], 24, true);
+        _this.shipBody.animations.add('explosion', Phaser.Animation.generateFrameNames('enemy_explosion_', 0, 15, '.png', 4), 24, false);
+        _this.shipBody.animations.getAnimation('explosion').onComplete.add(_this.onExplosion.bind(_this));
+        _this.shipBody.animations.play('stand');
+        return _this;
     }
     Enemy.prototype.addWeapon = function (weapon) {
         this.weapon = weapon;
@@ -552,11 +566,9 @@ var Enemy = (function (_super) {
     };
     Enemy.prototype.explode = function () {
         this.on = false;
-        var explosion = new Phaser.Sprite(this.state.game, this.getX(), this.getY(), 'explosion');
-        explosion.anchor.setTo(0.5, 0.5);
-        explosion.animations.add('explosion');
-        explosion.animations.getAnimation('explosion').play(30, false, true);
-        this.state.enemyLayer.add(explosion);
+        this.shipBody.animations.play('explosion');
+    };
+    Enemy.prototype.onExplosion = function () {
         this.shipBody.kill();
         this.toDestroy = true;
     };
@@ -825,8 +837,7 @@ var PlayState = (function (_super) {
         this.load.image('uibg', 'assets/img/uibg.png');
         this.load.atlasXML('mainsprite', 'assets/sprites/sheet.png', 'assets/sprites/sheet.xml');
         this.load.spritesheet('explosion', 'assets/img/explosion.png', 100, 100);
-        this.load.spritesheet('hero_ship_explosion', 'assets/img/hero_ship_explosion.png', 80, 100);
-        this.load.atlasJSONArray('hero_ship_0', 'assets/sprites/hero_ship_0.png', 'assets/sprites/hero_ship_0.json');
+        this.load.atlasJSONArray('hero', 'assets/sprites/hero.png', 'assets/sprites/hero.json');
         this.load.atlasJSONArray('enemy_01', 'assets/sprites/enemy_01.png', 'assets/sprites/enemy_01.json');
         this.load.atlasJSONArray('enemy_02', 'assets/sprites/enemy_02.png', 'assets/sprites/enemy_02.json');
         this.load.atlasJSONArray('enemy_03', 'assets/sprites/enemy_03.png', 'assets/sprites/enemy_03.json');
@@ -890,16 +901,15 @@ var PlayState = (function (_super) {
     };
     PlayState.prototype.update = function () {
         this.clock++;
-        if (this.levelData.timeline[this.clock]) {
-            switch (this.levelData.timeline[this.clock].event) {
-                case 0:
-                    this.spawnScriptedEnemey(this.levelData.timeline[this.clock]);
-                    break;
-            }
-        }
+        // if(this.levelData.timeline[this.clock]){
+        // 	switch(this.levelData.timeline[this.clock].event){
+        // 		case 0:
+        // 			this.spawnScriptedEnemey(this.levelData.timeline[this.clock]);
+        // 			break;
+        // 	}
+        // }
         //this.game.physics.arcade.collide(this.bodys);
-        if (this.autoCheck.checked)
-            this.spawner();
+        //if(this.autoCheck.checked) this.spawner();
     };
     PlayState.prototype.spawnScriptedEnemey = function (data) {
         var e = new Enemy(this, data.texture, data.type, data.acceleration, data.scoreValue);
@@ -920,7 +930,7 @@ var PlayState = (function (_super) {
     PlayState.prototype.collisionHandler = function () {
         console.log("COLLISION at play state");
     };
-    PlayState.prototype.onEnemyKilled = function () {
+    PlayState.prototype.onHeroKilled = function () {
         this.lifes--;
         if (this.lifes >= 0) {
             this.interfase.updateLifes();

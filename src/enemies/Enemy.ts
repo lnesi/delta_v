@@ -63,8 +63,10 @@ class Enemy extends SpaceShip{
 		this.shipBody.body.bounce.y=0.5;
 		//this.shipBody.body.collideWorldBounds=true;
 		
-		
-
+		this.shipBody.animations.add('stand', ['enemy_stand_0001.png'], 24, true);
+		this.shipBody.animations.add('explosion', Phaser.Animation.generateFrameNames('enemy_explosion_', 0, 15, '.png', 4), 24, false);
+		this.shipBody.animations.getAnimation('explosion').onComplete.add(this.onExplosion.bind(this));
+		this.shipBody.animations.play('stand');
 	}
 
 	addWeapon(weapon:EnemyWeapon){
@@ -213,11 +215,10 @@ class Enemy extends SpaceShip{
 	}
 	explode(){
 		this.on=false;
-		var explosion=new Phaser.Sprite(this.state.game,this.getX(),this.getY(),'explosion');
-		explosion.anchor.setTo(0.5,0.5);
-		explosion.animations.add('explosion');
-		explosion.animations.getAnimation('explosion').play(30,false,true);
-		this.state.enemyLayer.add(explosion);
+		this.shipBody.animations.play('explosion');
+		
+	}
+	onExplosion(){
 		this.shipBody.kill();
 		this.toDestroy=true;
 	}

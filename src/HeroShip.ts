@@ -21,7 +21,7 @@ class HeroShip extends SpaceShip {
 
         this.state = state;
 
-        this.shipBody = new Phaser.Sprite(state.game, 0, 0, "hero_ship_0");
+        this.shipBody = new Phaser.Sprite(state.game, 0, 0, "hero");
 
         this.shipBody.animations.add('stand', Phaser.Animation.generateFrameNames('hero_stand_', 0, 5, '.png', 4), 24, true);
         this.shipBody.animations.add('left', Phaser.Animation.generateFrameNames('hero_left_', 0, 5, '.png', 4), 24, false);
@@ -33,6 +33,8 @@ class HeroShip extends SpaceShip {
         this.shipBody.animations.add('fire_down', Phaser.Animation.generateFrameNames('hero_fire_stand_', 0, 2, '.png', 4), 24, false);
         this.shipBody.animations.add('fire_left', Phaser.Animation.generateFrameNames('hero_fire_left_', 0, 2, '.png', 4), 24, false);
         this.shipBody.animations.add('fire_right', Phaser.Animation.generateFrameNames('hero_fire_right_', 0, 2, '.png', 4), 24, false);
+        this.shipBody.animations.add('explosion', Phaser.Animation.generateFrameNames('hero_explosion_', 0, 15, '.png', 4), 24, false);
+        this.shipBody.animations.getAnimation("explosion").onComplete.add(this.state.onHeroKilled.bind(this.state));
         this.shipBody.animations.getAnimation("fire_stand").onComplete.add(this.gunFire.bind(this));
         this.shipBody.animations.getAnimation("fire_up").onComplete.add(this.gunFire.bind(this));
         this.shipBody.animations.getAnimation("fire_down").onComplete.add(this.gunFire.bind(this));
@@ -128,7 +130,7 @@ class HeroShip extends SpaceShip {
             this.shipBody.body.acceleration.x = this.acceleration.x;
             this.shipBody.body.acceleration.y = this.acceleration.y;
         }else{
-            this.animate("stand");
+            
             this.shipBody.body.acceleration.x = 0;
             this.shipBody.body.acceleration.y = 0;
         }
@@ -164,18 +166,10 @@ class HeroShip extends SpaceShip {
         	this.active=false;
         	let sfx = new Phaser.Sound(this.state.game, 'sfx_explosion', 1);
 	        //sfx.play();
-	        var explosion = new Phaser.Sprite(this.state.game, this.getX(), this.getY(), 'hero_ship_explosion');
-	        explosion.anchor.setTo(0.5, 0.5);
-	        explosion.animations.add('hero_ship_explosion');
-            explosion.animations.getAnimation('hero_ship_explosion').onComplete.add(this.state.onEnemyKilled.bind(this.state));
-	        explosion.animations.getAnimation('hero_ship_explosion').play(30, false, true);
-	        this.state.enemyLayer.add(explosion);
-	        this.shipBody.visible=false;
-	        
+            this.animate('explosion');
        
         }
        
-
     }
 
     reSpawn(){
@@ -185,6 +179,7 @@ class HeroShip extends SpaceShip {
 
 
     init(){
+        this.animate("stand");
         this.shipBody.visible=true;
         this.shipBody.x=Game.globalWidth/2;
         this.shipBody.y=Game.globalHeight+200;
@@ -196,6 +191,7 @@ class HeroShip extends SpaceShip {
         tween.onComplete.add(function(){
             this.activate();
             tweenBlink.stop();
+
             this.alpha=1;
         }, this);
         tween.start();
