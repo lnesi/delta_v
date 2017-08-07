@@ -34,7 +34,8 @@ class PlayState extends LoadableState{
 		this.load.image('Background_01','assets/img/background_01.png');
 		this.load.image('uibg','assets/img/uibg.png');
 		this.load.atlasXML('mainsprite','assets/sprites/sheet.png','assets/sprites/sheet.xml');
-		this.load.spritesheet('explosion','assets/img/explosion.png',64,64);
+		this.load.spritesheet('explosion','assets/img/explosion.png',100,100);
+		this.load.spritesheet('hero_ship_explosion','assets/img/hero_ship_explosion.png',80,100);
 		this.load.atlasJSONArray('hero_ship_0','assets/sprites/hero_ship_0.png','assets/sprites/hero_ship_0.json');
 		this.load.atlasJSONArray('enemy_01','assets/sprites/enemy_01.png','assets/sprites/enemy_01.json');
 		this.load.atlasJSONArray('enemy_02','assets/sprites/enemy_02.png','assets/sprites/enemy_02.json');

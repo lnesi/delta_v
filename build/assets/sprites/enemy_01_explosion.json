@@ -127,22 +127,14 @@
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":100,"h":100},
 	"sourceSize": {"w":100,"h":100}
-},
-{
-	"filename": "enemy_stand_0001.png",
-	"frame": {"x":1600,"y":0,"w":100,"h":100},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":100,"h":100},
-	"sourceSize": {"w":100,"h":100}
 }],
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker",
 	"version": "1.0",
-	"image": "enemy_01.png",
+	"image": "enemy_01_explosion.png",
 	"format": "RGBA8888",
-	"size": {"w":1700,"h":100},
+	"size": {"w":1600,"h":100},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:6e9fb61cd7bca3aeb95502b6c0326777:5f82e64ddba5fda8d7f50f8bf4ef75be:abf9baa50a59b53b09f50297342a183e$"
+	"smartupdate": "$TexturePacker:SmartUpdate:9f6e9c2dba030d0b9505a341ef5699ae:965031fc63efe4b1e0d3b02333e9f34c:f921803784ce6f140adb838b718a79a1$"
 }
 }

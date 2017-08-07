@@ -164,11 +164,11 @@ class HeroShip extends SpaceShip {
         	this.active=false;
         	let sfx = new Phaser.Sound(this.state.game, 'sfx_explosion', 1);
 	        //sfx.play();
-	        var explosion = new Phaser.Sprite(this.state.game, this.getX(), this.getY(), 'explosion');
+	        var explosion = new Phaser.Sprite(this.state.game, this.getX(), this.getY(), 'hero_ship_explosion');
 	        explosion.anchor.setTo(0.5, 0.5);
-	        explosion.animations.add('explosion');
-            explosion.animations.getAnimation('explosion').onComplete.add(this.state.onEnemyKilled.bind(this.state));
-	        explosion.animations.getAnimation('explosion').play(30, false, true);
+	        explosion.animations.add('hero_ship_explosion');
+            explosion.animations.getAnimation('hero_ship_explosion').onComplete.add(this.state.onEnemyKilled.bind(this.state));
+	        explosion.animations.getAnimation('hero_ship_explosion').play(30, false, true);
 	        this.state.enemyLayer.add(explosion);
 	        this.shipBody.visible=false;
 	        
