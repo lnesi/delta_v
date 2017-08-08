@@ -5,8 +5,8 @@ class Leaderboard extends HTMLScreen{
 	preloader:HTMLElement;
 	table:HTMLElement;
 	
-	constructor(elementId:string,game:Game){
-		super(elementId,game);
+	constructor(game:Game){
+		super("leaderboardScreen",game);
 		
 		for (var i = 0; i < this.html.childNodes.length; i++) {
 			let e:any=this.html.childNodes[i];

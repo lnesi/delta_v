@@ -27,7 +27,7 @@ class Game extends Phaser.Game{
 	}
 
 	setupScreens(){
-		this.leaderboard=new Leaderboard("leaderboard",this);
+		this.leaderboard=new Leaderboard(this);
 	}
 	setupFireBase(){
 		this.firebase.auth().signInAnonymously().catch(function(error:any) {

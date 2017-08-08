@@ -11,8 +11,7 @@ class Boot extends Phaser.State{
 			screens[i].style.width=document.getElementsByTagName("canvas")[0].clientWidth+"px";
 			screens[i].style.height=document.getElementsByTagName("canvas")[0].clientHeight+"px";
 		}
-		document.getElementById("leaderboard").style.width=document.getElementsByTagName("canvas")[0].clientWidth+"px";
-		document.getElementById("leaderboard").style.height=document.getElementsByTagName("canvas")[0].clientHeight+"px";
+		
 	}
 	preload(){
 		console.log("Boot: Preload");

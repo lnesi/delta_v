@@ -88,7 +88,7 @@ var Game = (function (_super) {
         this.state.add('GameOverState', GameOverState, false);
     };
     Game.prototype.setupScreens = function () {
-        this.leaderboard = new Leaderboard("leaderboard", this);
+        this.leaderboard = new Leaderboard(this);
     };
     Game.prototype.setupFireBase = function () {
         this.firebase.auth().signInAnonymously()["catch"](function (error) {
@@ -796,8 +796,8 @@ var HTMLScreen = (function () {
 ///<reference path="HTMLScreen.ts"/>
 var Leaderboard = (function (_super) {
     __extends(Leaderboard, _super);
-    function Leaderboard(elementId, game) {
-        var _this = _super.call(this, elementId, game) || this;
+    function Leaderboard(game) {
+        var _this = _super.call(this, "leaderboardScreen", game) || this;
         for (var i = 0; i < _this.html.childNodes.length; i++) {
             var e = _this.html.childNodes[i];
             if (e.className == "preloader") {
@@ -819,6 +819,14 @@ var Leaderboard = (function (_super) {
     };
     return Leaderboard;
 }(HTMLScreen));
+///<reference path="HTMLScreen.ts"/>
+var NameInputScreen = (function (_super) {
+    __extends(NameInputScreen, _super);
+    function NameInputScreen(game) {
+        return _super.call(this, "nameInputScreen", game) || this;
+    }
+    return NameInputScreen;
+}(HTMLScreen));
 var Boot = (function (_super) {
     __extends(Boot, _super);
     function Boot() {
@@ -836,8 +844,6 @@ var Boot = (function (_super) {
             screens[i].style.width = document.getElementsByTagName("canvas")[0].clientWidth + "px";
             screens[i].style.height = document.getElementsByTagName("canvas")[0].clientHeight + "px";
         }
-        document.getElementById("leaderboard").style.width = document.getElementsByTagName("canvas")[0].clientWidth + "px";
-        document.getElementById("leaderboard").style.height = document.getElementsByTagName("canvas")[0].clientHeight + "px";
     };
     Boot.prototype.preload = function () {
         console.log("Boot: Preload");
