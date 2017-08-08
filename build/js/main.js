@@ -735,7 +735,7 @@ var BackgroundRow = (function (_super) {
         _this.game = bk.game;
         var columns = Math.ceil(_this.game.globalWidth() / bk.blockWidth);
         for (var i = 0; i < columns; i++) {
-            var s = new Phaser.Sprite(_this.game, bk.blockWidth * i, 0, 'back_sprite_01', "bge_0" + Phaser.Math.between(1, 6) + ".png");
+            var s = new Phaser.Sprite(_this.game, bk.blockWidth * i, 0, 'back_sprite_01', "bge_0" + Phaser.Math.between(1, 8) + ".png");
             _this.addChild(s);
         }
         _this.y = -bk.blockHeight;
