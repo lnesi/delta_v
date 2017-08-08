@@ -56,10 +56,11 @@ class PlayState extends LoadableState{
 
 		this.levelData=this.game.cache.getJSON('levelData');
 		new SpaceBackground(this);
+		new SpaceForeground(this,"01.png",2);
 		this.weaponsLayer=new Phaser.Group(this.game);
 		this.enemyLayer=new Phaser.Group(this.game);
 		this.heroLayer=new Phaser.Group(this.game);
-		new SpaceForeground(this);
+		new SpaceForeground(this,"02.png",4);
 		this.foregroundLayer=new Phaser.Group(this.game);
 
 		

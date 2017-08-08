@@ -389,14 +389,15 @@ var SpaceBackground = (function (_super) {
 }(Phaser.Group));
 var SpaceForeground = (function (_super) {
     __extends(SpaceForeground, _super);
-    function SpaceForeground(state) {
+    function SpaceForeground(state, key, speed) {
         var _this = _super.call(this, state.game) || this;
-        _this.ts = new Phaser.TileSprite(state.game, 0, 0, Game.globalWidth, Game.globalHeight, 'clouds', '01.png');
+        _this.speed = speed;
+        _this.ts = new Phaser.TileSprite(state.game, 0, 0, Game.globalWidth, Game.globalHeight, 'clouds', key);
         _this.addChild(_this.ts);
         return _this;
     }
     SpaceForeground.prototype.update = function () {
-        this.ts.tilePosition.y += 2;
+        this.ts.tilePosition.y += this.speed;
     };
     return SpaceForeground;
 }(Phaser.Group));
@@ -963,10 +964,11 @@ var PlayState = (function (_super) {
         this.autoCheck = document.getElementById("autospawn");
         this.levelData = this.game.cache.getJSON('levelData');
         new SpaceBackground(this);
+        new SpaceForeground(this, "01.png", 2);
         this.weaponsLayer = new Phaser.Group(this.game);
         this.enemyLayer = new Phaser.Group(this.game);
         this.heroLayer = new Phaser.Group(this.game);
-        new SpaceForeground(this);
+        new SpaceForeground(this, "02.png", 4);
         this.foregroundLayer = new Phaser.Group(this.game);
         this.enemyCollider = new Phaser.Sprite(this.game, 0, Game.globalHeight + (Enemy.offsetHeight / 2));
         this.physics.enable(this.enemyCollider, Phaser.Physics.ARCADE);
