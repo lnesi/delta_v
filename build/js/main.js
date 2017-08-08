@@ -32,6 +32,7 @@ var DisplayInterfase = (function (_super) {
             _this.lifes[i] = new Phaser.Sprite(state.game, offsetX + (separationLife * i), 15, 'vidas', 'vida_on.png');
             _this.lifes[i].animations.add('on', ['vida_on.png'], 24, true);
             _this.lifes[i].animations.add('off', ['vida_off.png'], 24, true);
+            _this.lifes[i].animations.play('on');
             _this.add(_this.lifes[i]);
         }
         _this.alpha = 0.75;
@@ -44,8 +45,14 @@ var DisplayInterfase = (function (_super) {
     DisplayInterfase.prototype.updateLifes = function () {
         var total = this.state.lifes;
         for (var i = this.lifes.length - 1; i > total - 1; i--) {
-            console.log(i);
-            this.lifes[i].animations.play("off");
+            this.animatelifeIndicator(this.lifes[i]);
+        }
+    };
+    DisplayInterfase.prototype.animatelifeIndicator = function (life) {
+        if (life.animations.currentAnim.name == "on") {
+            life.animations.play("off");
+            var tweenBlink = this.game.add.tween(life);
+            tweenBlink.to({ alpha: 0.5 }, 200, "Linear", true, 0, 10, true);
         }
     };
     DisplayInterfase.prototype.update = function () {
