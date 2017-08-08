@@ -714,14 +714,14 @@ var BackgroundBlock = (function (_super) {
         _this.blockHeight = 64;
         _this.clock = 0;
         _this.game = game;
-        _this.addChild(new BackgroundRow(game));
+        _this.addChild(new BackgroundRow(_this));
         _this.clock = 0;
         return _this;
     }
     BackgroundBlock.prototype.update = function () {
         this.clock++;
-        if (this.clock % 64 == 0) {
-            this.addChild(new BackgroundRow(this.game));
+        if (this.clock % this.blockHeight == 0) {
+            this.addChild(new BackgroundRow(this));
         }
         _super.prototype.update.call(this);
     };
@@ -729,19 +729,24 @@ var BackgroundBlock = (function (_super) {
 }(Phaser.Group));
 var BackgroundRow = (function (_super) {
     __extends(BackgroundRow, _super);
-    function BackgroundRow(game) {
-        var _this = _super.call(this, game) || this;
-        _this.blockWidth = 64;
-        var columns = Math.ceil(game.globalWidth() / _this.blockWidth);
+    function BackgroundRow(bk) {
+        var _this = _super.call(this, bk.game) || this;
+        _this.game = bk.game;
+        var columns = Math.ceil(_this.game.globalWidth() / bk.blockWidth);
         for (var i = 0; i < columns; i++) {
-            var s = new Phaser.Sprite(game, _this.blockWidth * i, 0, 'back_sprite_01', "0" + Phaser.Math.between(1, 6) + ".png");
+            var s = new Phaser.Sprite(_this.game, bk.blockWidth * i, 0, 'back_sprite_01', "0" + Phaser.Math.between(1, 6) + ".png");
             _this.addChild(s);
         }
         _this.y = -64;
         return _this;
     }
     BackgroundRow.prototype.update = function () {
-        this.y += 1;
+        if (this.y > this.game.globalHeight()) {
+            this.destroy(true);
+        }
+        else {
+            this.y += 1;
+        }
     };
     return BackgroundRow;
 }(Phaser.Group));

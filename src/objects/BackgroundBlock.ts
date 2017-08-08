@@ -7,7 +7,7 @@ class BackgroundBlock extends Phaser.Group{
 	constructor(game:Game){
 		super(game);
 		this.game=game;
-		this.addChild(new BackgroundRow(game));
+		this.addChild(new BackgroundRow(this));
 
 		this.clock=0;
 
@@ -16,8 +16,8 @@ class BackgroundBlock extends Phaser.Group{
 	update(){
 		
 		this.clock++;
-		if(this.clock%64==0){
-			this.addChild(new BackgroundRow(this.game));
+		if(this.clock%this.blockHeight==0){
+			this.addChild(new BackgroundRow(this));
 		}
 		super.update();
 	}
