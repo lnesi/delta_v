@@ -2,23 +2,24 @@ class BackgroundBlock extends Phaser.Group{
 	on:boolean=false;
 	blockWidth:number=64;
 	blockHeight:number=64;
+	clock:number=0;
+	game:Game;
 	constructor(game:Game){
 		super(game);
+		this.game=game;
+		this.addChild(new BackgroundRow(game));
 
-		let columns=Math.ceil(game.globalWidth()/this.blockWidth);
-		let filas=Math.ceil(game.globalHeight()/this.blockHeight);
-		for(var i:number=0;i<columns;i++){
-			for(var j:number=0;j<filas;j++){
-				let s=new Phaser.Sprite(game,this.blockWidth*i,(this.blockHeight*j),'back_sprite_01',"0"+Phaser.Math.between(1,6)+".png");
-				this.addChild(s);
-			}
-		}
-
-
+		this.clock=0;
 
 	}
+
 	update(){
-		this.y+=1;
 		
+		this.clock++;
+		if(this.clock%64==0){
+			this.addChild(new BackgroundRow(this.game));
+		}
+		super.update();
 	}
+	
 }
