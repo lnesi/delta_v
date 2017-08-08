@@ -63,8 +63,8 @@ class Enemy extends SpaceShip{
 		this.shipBody.body.bounce.y=0.5;
 		//this.shipBody.body.collideWorldBounds=true;
 		
-		this.shipBody.animations.add('stand', ['enemy_stand_0001.png'], 24, true);
-		this.shipBody.animations.add('explosion', Phaser.Animation.generateFrameNames('enemy_explosion_', 0, 15, '.png', 4), 24, false);
+		this.shipBody.animations.add('stand', ['stand.png'], 24, true);
+		this.shipBody.animations.add('explosion', Phaser.Animation.generateFrameNames('explosion_', 0, 15, '.png', 4), 24, false);
 		this.shipBody.animations.getAnimation('explosion').onComplete.add(this.onExplosion.bind(this));
 		this.shipBody.animations.play('stand');
 	}

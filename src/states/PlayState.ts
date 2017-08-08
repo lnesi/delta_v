@@ -135,7 +135,7 @@ class PlayState extends LoadableState{
 		
 		//this.game.physics.arcade.collide(this.bodys);
 
-		//if(this.autoCheck.checked) this.spawner();
+		if(this.autoCheck.checked) this.spawner();
 	}
 	
 	spawnScriptedEnemey(data:any){
