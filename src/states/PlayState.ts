@@ -39,6 +39,7 @@ class PlayState extends LoadableState{
 		this.load.atlasJSONArray('enemy_01','assets/sprites/enemy_01.png','assets/sprites/enemy_01.json');
 		this.load.atlasJSONArray('enemy_02','assets/sprites/enemy_02.png','assets/sprites/enemy_02.json');
 		this.load.atlasJSONArray('enemy_03','assets/sprites/enemy_03.png','assets/sprites/enemy_03.json');
+		this.load.atlasJSONArray('vidas','assets/sprites/vidas.png','assets/sprites/vidas.json');
 		this.load.image('enemy_fire_bullet','assets/img/enemy_fire_bullet.png');
 		this.load.image('hero_fire_bullet','assets/img/hero_fire_bullet.png');
 		this.load.audio('sfx_laser1',"assets/audio/sfx_laser1.ogg");

@@ -13,7 +13,7 @@ class BackgroundBlock extends Phaser.Group{
 			this.addChild(b);
 			b.y=this.blockHeight*i;
 		}
-
+		this.addChild(new BackgroundRow(this));
 		this.clock=0;
 
 	}

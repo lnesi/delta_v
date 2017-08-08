@@ -25,9 +25,11 @@ class DisplayInterfase extends Phaser.Group{
   		scoreLabel.x=Game.globalWidth-scoreLabel.width-20;
   		
 		let offsetX=280;
-		let separationLife=50;
+		let separationLife=25;
 		for(var i:number=0;i<3;i++){
-			this.lifes[i]=new Phaser.Sprite(state.game,offsetX+(separationLife*i),15,'mainsprite','playerLife1_blue.png');
+			this.lifes[i]=new Phaser.Sprite(state.game,offsetX+(separationLife*i),15,'vidas','vida_on.png');
+			this.lifes[i].animations.add('on',['vida_on.png'],24,true);
+			this.lifes[i].animations.add('off',['vida_off.png'],24,true);
 			this.add(this.lifes[i]);
 		}
   		
@@ -43,7 +45,7 @@ class DisplayInterfase extends Phaser.Group{
 		let total=this.state.lifes;
 		for(var i:number=this.lifes.length-1;i>total-1;i--){
 			console.log(i);
-			this.lifes[i].visible=false;
+			this.lifes[i].animations.play("off");
 		}
 	}
 	update(){

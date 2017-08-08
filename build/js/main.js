@@ -27,9 +27,11 @@ var DisplayInterfase = (function (_super) {
         _this.add(scoreLabel);
         scoreLabel.x = Game.globalWidth - scoreLabel.width - 20;
         var offsetX = 280;
-        var separationLife = 50;
+        var separationLife = 25;
         for (var i = 0; i < 3; i++) {
-            _this.lifes[i] = new Phaser.Sprite(state.game, offsetX + (separationLife * i), 15, 'mainsprite', 'playerLife1_blue.png');
+            _this.lifes[i] = new Phaser.Sprite(state.game, offsetX + (separationLife * i), 15, 'vidas', 'vida_on.png');
+            _this.lifes[i].animations.add('on', ['vida_on.png'], 24, true);
+            _this.lifes[i].animations.add('off', ['vida_off.png'], 24, true);
             _this.add(_this.lifes[i]);
         }
         _this.alpha = 0.75;
@@ -43,7 +45,7 @@ var DisplayInterfase = (function (_super) {
         var total = this.state.lifes;
         for (var i = this.lifes.length - 1; i > total - 1; i--) {
             console.log(i);
-            this.lifes[i].visible = false;
+            this.lifes[i].animations.play("off");
         }
     };
     DisplayInterfase.prototype.update = function () {
@@ -720,6 +722,7 @@ var BackgroundBlock = (function (_super) {
             _this.addChild(b);
             b.y = _this.blockHeight * i;
         }
+        _this.addChild(new BackgroundRow(_this));
         _this.clock = 0;
         return _this;
     }
@@ -913,6 +916,7 @@ var PlayState = (function (_super) {
         this.load.atlasJSONArray('enemy_01', 'assets/sprites/enemy_01.png', 'assets/sprites/enemy_01.json');
         this.load.atlasJSONArray('enemy_02', 'assets/sprites/enemy_02.png', 'assets/sprites/enemy_02.json');
         this.load.atlasJSONArray('enemy_03', 'assets/sprites/enemy_03.png', 'assets/sprites/enemy_03.json');
+        this.load.atlasJSONArray('vidas', 'assets/sprites/vidas.png', 'assets/sprites/vidas.json');
         this.load.image('enemy_fire_bullet', 'assets/img/enemy_fire_bullet.png');
         this.load.image('hero_fire_bullet', 'assets/img/hero_fire_bullet.png');
         this.load.audio('sfx_laser1', "assets/audio/sfx_laser1.ogg");
