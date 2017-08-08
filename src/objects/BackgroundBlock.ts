@@ -1,7 +1,7 @@
 class BackgroundBlock extends Phaser.Group{
 	on:boolean=false;
-	blockWidth:number=64;
-	blockHeight:number=64;
+	blockWidth:number=128;
+	blockHeight:number=128;
 	clock:number=0;
 	game:Game;
 	constructor(game:Game){

@@ -8,7 +8,7 @@ class BackgroundRow extends Phaser.Group{
 			let s=new Phaser.Sprite(this.game,bk.blockWidth*i,0,'back_sprite_01',"bge_0"+Phaser.Math.between(1,6)+".png");
 			this.addChild(s);
 		}
-		this.y=-64;
+		this.y=-bk.blockHeight;
 	}
 
 	update(){

@@ -195,12 +195,8 @@ class Enemy extends SpaceShip{
 	
 	weaponHitHandler(heroBody:Phaser.Sprite,bullet:Phaser.Sprite){
 		
+		this.state.hero.hitTracker(this.weapon.damage);
 		
-		if(this.state.hero.life>=0){
-			this.state.hero.life=this.state.hero.life-this.weapon.damage;
-		}else{
-			this.state.hero.kill();
-		}
 		bullet.kill();
 
 		

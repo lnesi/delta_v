@@ -135,13 +135,15 @@ class HeroShip extends SpaceShip {
             this.shipBody.body.acceleration.y = 0;
         }
 
-
+        this.shipBody.tint=0xffffff;
 
     }
+
     hitHandler(shipBody: Phaser.Sprite, bullet: Phaser.Sprite) {
         console.log("Collidion hero");
         bullet.kill();
     }
+
     gunFire() {
 
         this.weapon.fireWeapon();
@@ -204,6 +206,13 @@ class HeroShip extends SpaceShip {
     spawn() {
 
     }
-
+    hitTracker(hitValue:number){
+        if(this.life>=0){
+            this.state.hero.life=this.state.hero.life-hitValue;
+            this.shipBody.tint=0.1*0xffffff;
+        }else{
+            this.kill();
+        }
+    }
 
 }
