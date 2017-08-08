@@ -7,7 +7,12 @@ class BackgroundBlock extends Phaser.Group{
 	constructor(game:Game){
 		super(game);
 		this.game=game;
-		this.addChild(new BackgroundRow(this));
+		let filas=Math.ceil(game.globalHeight()/this.blockHeight);
+		for(var i:number=0;i<filas;i++){
+			let b=new BackgroundRow(this);
+			this.addChild(b);
+			b.y=this.blockHeight*i;
+		}
 
 		this.clock=0;
 

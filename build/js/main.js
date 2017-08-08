@@ -714,7 +714,12 @@ var BackgroundBlock = (function (_super) {
         _this.blockHeight = 64;
         _this.clock = 0;
         _this.game = game;
-        _this.addChild(new BackgroundRow(_this));
+        var filas = Math.ceil(game.globalHeight() / _this.blockHeight);
+        for (var i = 0; i < filas; i++) {
+            var b = new BackgroundRow(_this);
+            _this.addChild(b);
+            b.y = _this.blockHeight * i;
+        }
         _this.clock = 0;
         return _this;
     }
