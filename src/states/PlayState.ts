@@ -31,6 +31,7 @@ class PlayState extends LoadableState{
 		super.preload();
 		this.load.json('levelData',"data/level.json");
 		this.load.image('Background_01','assets/img/background_01_0.png');
+		this.load.atlasJSONArray('clouds','assets/sprites/clouds.png','assets/sprites/clouds.json');
 		this.load.atlasJSONArray('back_sprite_01','assets/sprites/background_01.png','assets/sprites/background_01.json');
 		this.load.image('uibg','assets/img/uibg.png');
 		this.load.atlasXML('mainsprite','assets/sprites/sheet.png','assets/sprites/sheet.xml');
@@ -54,10 +55,11 @@ class PlayState extends LoadableState{
 		this.autoCheck=document.getElementById("autospawn");
 
 		this.levelData=this.game.cache.getJSON('levelData');
-		this.backgroundLayer=new SpaceBackground(this);
+		new SpaceBackground(this);
 		this.weaponsLayer=new Phaser.Group(this.game);
 		this.enemyLayer=new Phaser.Group(this.game);
 		this.heroLayer=new Phaser.Group(this.game);
+		new SpaceForeground(this);
 		this.foregroundLayer=new Phaser.Group(this.game);
 
 		

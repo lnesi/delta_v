@@ -75,19 +75,29 @@ var Game = (function (_super) {
         _this.currentScore = 0;
         _this.user = null;
         _this.firebase = firebase;
-        _this.state.add('Boot', Boot, false);
-        _this.state.add('PlayState', PlayState, false);
-        _this.state.add('LandingState', LandingState, false);
-        _this.state.add('GameOverState', GameOverState, false);
+        _this.setupStates();
+        _this.setupScreens();
+        //this.setupFireBase();
         _this.state.start("Boot");
-        _this.leaderboard = new Leaderboard("leaderboard", _this);
-        firebase.auth().signInAnonymously()["catch"](function (error) {
+        return _this;
+    }
+    Game.prototype.setupStates = function () {
+        this.state.add('Boot', Boot, false);
+        this.state.add('PlayState', PlayState, false);
+        this.state.add('LandingState', LandingState, false);
+        this.state.add('GameOverState', GameOverState, false);
+    };
+    Game.prototype.setupScreens = function () {
+        this.leaderboard = new Leaderboard("leaderboard", this);
+    };
+    Game.prototype.setupFireBase = function () {
+        this.firebase.auth().signInAnonymously()["catch"](function (error) {
             // Handle Errors here.
             var errorCode = error.code;
             var errorMessage = error.message;
             // ...
         });
-        firebase.auth().onAuthStateChanged(function (user) {
+        this.firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
                 this.user = user;
                 console.log(this.user);
@@ -95,9 +105,8 @@ var Game = (function (_super) {
             else {
             }
             // ...
-        }.bind(_this));
-        return _this;
-    }
+        }.bind(this));
+    };
     Game.prototype.globalWidth = function () {
         return Game.globalWidth;
     };
@@ -363,48 +372,6 @@ var HeroShip = (function (_super) {
     };
     return HeroShip;
 }(SpaceShip));
-var HTMLScreen = (function () {
-    function HTMLScreen(elementId, game) {
-        this.html = document.getElementById(elementId);
-        this.game = game;
-    }
-    HTMLScreen.prototype.show = function () {
-        this.html.style.display = "block";
-        gsap.TweenMax.to(this.html, 1, { "opacity": 1 });
-    };
-    HTMLScreen.prototype.hide = function () {
-        gsap.TweenMax.to(this.html, 1, { "opacity": 0, onComplete: function () {
-                this.html.style.display = "none";
-            }.bind(this) });
-    };
-    return HTMLScreen;
-}());
-///<reference path="objects/HTMLScreen.ts"/>
-var Leaderboard = (function (_super) {
-    __extends(Leaderboard, _super);
-    function Leaderboard(elementId, game) {
-        var _this = _super.call(this, elementId, game) || this;
-        for (var i = 0; i < _this.html.childNodes.length; i++) {
-            var e = _this.html.childNodes[i];
-            if (e.className == "preloader") {
-                _this.preloader = e;
-            }
-            ;
-            if (e.className == "tableHolder") {
-                _this.table = e;
-            }
-        }
-        _this.table.style.display = "none";
-        _this.preloader.style.display = "none";
-        return _this;
-    }
-    Leaderboard.prototype.show = function () {
-        this.table.style.display = "none";
-        this.preloader.style.display = "block";
-        _super.prototype.show.call(this);
-    };
-    return Leaderboard;
-}(HTMLScreen));
 var SpaceBackground = (function (_super) {
     __extends(SpaceBackground, _super);
     function SpaceBackground(state) {
@@ -419,6 +386,19 @@ var SpaceBackground = (function (_super) {
         this.ts.tilePosition.y += 1;
     };
     return SpaceBackground;
+}(Phaser.Group));
+var SpaceForeground = (function (_super) {
+    __extends(SpaceForeground, _super);
+    function SpaceForeground(state) {
+        var _this = _super.call(this, state.game) || this;
+        _this.ts = new Phaser.TileSprite(state.game, 0, 0, Game.globalWidth, Game.globalHeight, 'clouds', '01.png');
+        _this.addChild(_this.ts);
+        return _this;
+    }
+    SpaceForeground.prototype.update = function () {
+        this.ts.tilePosition.y += 2;
+    };
+    return SpaceForeground;
 }(Phaser.Group));
 var Enemy = (function (_super) {
     __extends(Enemy, _super);
@@ -791,6 +771,48 @@ var LoadableState = (function (_super) {
     };
     return LoadableState;
 }(Phaser.State));
+var HTMLScreen = (function () {
+    function HTMLScreen(elementId, game) {
+        this.html = document.getElementById(elementId);
+        this.game = game;
+    }
+    HTMLScreen.prototype.show = function () {
+        this.html.style.display = "block";
+        gsap.TweenMax.to(this.html, 1, { "opacity": 1 });
+    };
+    HTMLScreen.prototype.hide = function () {
+        gsap.TweenMax.to(this.html, 1, { "opacity": 0, onComplete: function () {
+                this.html.style.display = "none";
+            }.bind(this) });
+    };
+    return HTMLScreen;
+}());
+///<reference path="HTMLScreen.ts"/>
+var Leaderboard = (function (_super) {
+    __extends(Leaderboard, _super);
+    function Leaderboard(elementId, game) {
+        var _this = _super.call(this, elementId, game) || this;
+        for (var i = 0; i < _this.html.childNodes.length; i++) {
+            var e = _this.html.childNodes[i];
+            if (e.className == "preloader") {
+                _this.preloader = e;
+            }
+            ;
+            if (e.className == "tableHolder") {
+                _this.table = e;
+            }
+        }
+        _this.table.style.display = "none";
+        _this.preloader.style.display = "none";
+        return _this;
+    }
+    Leaderboard.prototype.show = function () {
+        this.table.style.display = "none";
+        this.preloader.style.display = "block";
+        _super.prototype.show.call(this);
+    };
+    return Leaderboard;
+}(HTMLScreen));
 var Boot = (function (_super) {
     __extends(Boot, _super);
     function Boot() {
@@ -803,6 +825,11 @@ var Boot = (function (_super) {
         this.scale.onSizeChange.add(this.sizeChange);
     };
     Boot.prototype.sizeChange = function () {
+        var screens = document.getElementsByClassName("htmlScreen");
+        for (var i = 0; i < screens.length; i++) {
+            screens[i].style.width = document.getElementsByTagName("canvas")[0].clientWidth + "px";
+            screens[i].style.height = document.getElementsByTagName("canvas")[0].clientHeight + "px";
+        }
         document.getElementById("leaderboard").style.width = document.getElementsByTagName("canvas")[0].clientWidth + "px";
         document.getElementById("leaderboard").style.height = document.getElementsByTagName("canvas")[0].clientHeight + "px";
     };
@@ -915,6 +942,7 @@ var PlayState = (function (_super) {
         _super.prototype.preload.call(this);
         this.load.json('levelData', "data/level.json");
         this.load.image('Background_01', 'assets/img/background_01_0.png');
+        this.load.atlasJSONArray('clouds', 'assets/sprites/clouds.png', 'assets/sprites/clouds.json');
         this.load.atlasJSONArray('back_sprite_01', 'assets/sprites/background_01.png', 'assets/sprites/background_01.json');
         this.load.image('uibg', 'assets/img/uibg.png');
         this.load.atlasXML('mainsprite', 'assets/sprites/sheet.png', 'assets/sprites/sheet.xml');
@@ -934,10 +962,11 @@ var PlayState = (function (_super) {
         _super.prototype.create.call(this);
         this.autoCheck = document.getElementById("autospawn");
         this.levelData = this.game.cache.getJSON('levelData');
-        this.backgroundLayer = new SpaceBackground(this);
+        new SpaceBackground(this);
         this.weaponsLayer = new Phaser.Group(this.game);
         this.enemyLayer = new Phaser.Group(this.game);
         this.heroLayer = new Phaser.Group(this.game);
+        new SpaceForeground(this);
         this.foregroundLayer = new Phaser.Group(this.game);
         this.enemyCollider = new Phaser.Sprite(this.game, 0, Game.globalHeight + (Enemy.offsetHeight / 2));
         this.physics.enable(this.enemyCollider, Phaser.Physics.ARCADE);
@@ -1055,6 +1084,39 @@ function extend(first, second) {
     }
     return result;
 }
+var Test = (function (_super) {
+    __extends(Test, _super);
+    function Test() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Test.prototype.preload = function () {
+        this.load.image('hero_fire_bullet', 'assets/img/enemy_fire_bullet.png');
+    };
+    Test.prototype.create = function () {
+        this.game.physics.arcade.gravity.y = 0;
+        var SECOND = 1000;
+        var BURST_LIFESPAN = 1.9 * SECOND;
+        var BURST_QUANTITY = 500;
+        var RED = 'rgba(255,0,0,0.5)';
+        var ROCKET_INTERVAL = 1 * SECOND;
+        var ROCKET_LIFESPAN = 1 * SECOND;
+        var ROCKET_QUANTITY = 1;
+        var bounds = this.world.bounds;
+        this.rocketLauncher = new Phaser.Particles.Arcade.Emitter(this.game, bounds.centerX, bounds.centerY, 1000);
+        this.rocketLauncher.name = "rockets";
+        this.rocketLauncher.gravity = 0;
+        this.rocketLauncher.minParticleScale = 1;
+        this.rocketLauncher.maxParticleScale = 1;
+        this.rocketLauncher.setRotation(0, 0);
+        this.rocketLauncher.setXSpeed(-500, 500);
+        this.rocketLauncher.setYSpeed(-500, 500);
+        this.rocketLauncher.makeParticles('hero_fire_bullet');
+        this.rocketLauncher.explode(1000, 100);
+    };
+    Test.prototype.update = function () {
+    };
+    return Test;
+}(Phaser.State));
 var KeyInput = (function () {
     function KeyInput() {
     }

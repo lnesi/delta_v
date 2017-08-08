@@ -7,23 +7,37 @@ class Game extends Phaser.Game{
 	public leaderboard:any;
 	public firebase:any;
 	public user:any=null;
+	
 	constructor(firebase:any){
 		super(Game.globalWidth,Game.globalHeight, Phaser.CANVAS);
 		this.firebase=firebase;
+		
+		this.setupStates();
+		this.setupScreens();
+		//this.setupFireBase();
+		this.state.start("Boot");
+
+	}
+
+	setupStates(){
 		this.state.add('Boot',Boot,false);
 		this.state.add('PlayState',PlayState,false);
 		this.state.add('LandingState',LandingState,false);
 		this.state.add('GameOverState',GameOverState,false);
-		this.state.start("Boot");
+	}
+
+	setupScreens(){
 		this.leaderboard=new Leaderboard("leaderboard",this);
-		firebase.auth().signInAnonymously().catch(function(error:any) {
+	}
+	setupFireBase(){
+		this.firebase.auth().signInAnonymously().catch(function(error:any) {
 		  // Handle Errors here.
 		  var errorCode = error.code;
 		  var errorMessage = error.message;
 		  // ...
 		});
 
-		firebase.auth().onAuthStateChanged(function(user:any) {
+		this.firebase.auth().onAuthStateChanged(function(user:any) {
 		  if (user) {
 		  	this.user=user;
 		    console.log(this.user)
@@ -32,10 +46,6 @@ class Game extends Phaser.Game{
 		  }
 		  // ...
 		}.bind(this));
-
-	
-
-
 	}
 	
 	globalWidth(){

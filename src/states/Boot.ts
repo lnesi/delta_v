@@ -6,6 +6,11 @@ class Boot extends Phaser.State{
 		this.scale.onSizeChange.add(this.sizeChange);
 	}
 	sizeChange(){
+		let screens:any=document.getElementsByClassName("htmlScreen");
+		for(let i:number=0;i<screens.length;i++){
+			screens[i].style.width=document.getElementsByTagName("canvas")[0].clientWidth+"px";
+			screens[i].style.height=document.getElementsByTagName("canvas")[0].clientHeight+"px";
+		}
 		document.getElementById("leaderboard").style.width=document.getElementsByTagName("canvas")[0].clientWidth+"px";
 		document.getElementById("leaderboard").style.height=document.getElementsByTagName("canvas")[0].clientHeight+"px";
 	}

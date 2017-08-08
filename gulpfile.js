@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var webserver = require('gulp-webserver');
- 
+var sass = require('gulp-sass');
+
 gulp.task('serve', function() {
   gulp.src('build')
     .pipe(webserver({
@@ -8,6 +9,16 @@ gulp.task('serve', function() {
       directoryListing: false,
       open: true
     }));
+});
+
+gulp.task('sass', function () {
+  return gulp.src('./sass/**/*.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest('./build/css'));
+});
+
+gulp.task('sass:watch', function () {
+  gulp.watch('./sass/**/*.scss', ['sass']);
 });
 
 gulp.task("vendor", function() {

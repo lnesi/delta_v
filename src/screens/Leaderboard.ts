@@ -1,4 +1,4 @@
-///<reference path="objects/HTMLScreen.ts"/>
+///<reference path="HTMLScreen.ts"/>
 
 class Leaderboard extends HTMLScreen{
 	
