@@ -1,7 +1,7 @@
 {"frames": [
 
 {
-	"filename": "01.png",
+	"filename": "bge_01.png",
 	"frame": {"x":0,"y":0,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
@@ -9,40 +9,40 @@
 	"sourceSize": {"w":64,"h":64}
 },
 {
-	"filename": "02.png",
-	"frame": {"x":64,"y":0,"w":64,"h":64},
+	"filename": "bge_02.png",
+	"frame": {"x":64,"y":0,"w":65,"h":65},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
-	"sourceSize": {"w":64,"h":64}
+	"spriteSourceSize": {"x":0,"y":0,"w":65,"h":65},
+	"sourceSize": {"w":65,"h":65}
 },
 {
-	"filename": "03.png",
-	"frame": {"x":128,"y":0,"w":64,"h":64},
+	"filename": "bge_03.png",
+	"frame": {"x":129,"y":0,"w":65,"h":65},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
-	"sourceSize": {"w":64,"h":64}
+	"spriteSourceSize": {"x":0,"y":0,"w":65,"h":65},
+	"sourceSize": {"w":65,"h":65}
 },
 {
-	"filename": "04.png",
-	"frame": {"x":192,"y":0,"w":64,"h":64},
+	"filename": "bge_04.png",
+	"frame": {"x":194,"y":0,"w":64,"h":65},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
-	"sourceSize": {"w":64,"h":64}
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":65},
+	"sourceSize": {"w":64,"h":65}
 },
 {
-	"filename": "05.png",
-	"frame": {"x":256,"y":0,"w":64,"h":64},
+	"filename": "bge_05.png",
+	"frame": {"x":258,"y":0,"w":64,"h":65},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
-	"sourceSize": {"w":64,"h":64}
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":65},
+	"sourceSize": {"w":64,"h":65}
 },
 {
-	"filename": "06.png",
-	"frame": {"x":320,"y":0,"w":64,"h":64},
+	"filename": "bge_06.png",
+	"frame": {"x":322,"y":0,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -53,8 +53,8 @@
 	"version": "1.0",
 	"image": "background_01.png",
 	"format": "RGBA8888",
-	"size": {"w":384,"h":64},
+	"size": {"w":386,"h":65},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:1b46d7570fbe2c05a8ac69092f82d1b7:d8fb3fc9978e220c6375c3d5055cff90:a15cb074ec20f25089dfb1f11b76715a$"
+	"smartupdate": "$TexturePacker:SmartUpdate:16e256b879edf6dd8368fb4e8b12fc52:370e54a4808b8d483d25718540e350d5:a15cb074ec20f25089dfb1f11b76715a$"
 }
 }
