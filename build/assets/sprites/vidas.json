@@ -1,44 +1,28 @@
 {"frames": [
 
 {
-	"filename": "vidas_0.png",
-	"frame": {"x":0,"y":0,"w":72,"h":25},
+	"filename": "vida_off.png",
+	"frame": {"x":0,"y":0,"w":17,"h":25},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":72,"h":25},
-	"sourceSize": {"w":72,"h":25}
+	"spriteSourceSize": {"x":0,"y":0,"w":17,"h":25},
+	"sourceSize": {"w":17,"h":25}
 },
 {
-	"filename": "vidas_1.png",
-	"frame": {"x":72,"y":0,"w":72,"h":25},
+	"filename": "vida_on.png",
+	"frame": {"x":17,"y":0,"w":17,"h":25},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":72,"h":25},
-	"sourceSize": {"w":72,"h":25}
-},
-{
-	"filename": "vidas_2.png",
-	"frame": {"x":144,"y":0,"w":72,"h":25},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":72,"h":25},
-	"sourceSize": {"w":72,"h":25}
-},
-{
-	"filename": "vidas_3.png",
-	"frame": {"x":216,"y":0,"w":72,"h":25},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":72,"h":25},
-	"sourceSize": {"w":72,"h":25}
+	"spriteSourceSize": {"x":0,"y":0,"w":17,"h":25},
+	"sourceSize": {"w":17,"h":25}
 }],
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker",
 	"version": "1.0",
 	"image": "vidas.png",
 	"format": "RGBA8888",
-	"size": {"w":288,"h":25},
+	"size": {"w":34,"h":25},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:b777b793d7392ad15808f1ee1b7da058:b4a130075e8c6b2072c72c769dedaf94:32d2c79eab62c4e005f1f4e2485fe799$"
+	"smartupdate": "$TexturePacker:SmartUpdate:036b1be81c9b383ae8dd345978a31593:86d39524f2dbb24eebba1378bd48b352:32d2c79eab62c4e005f1f4e2485fe799$"
 }
 }
