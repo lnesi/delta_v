@@ -129,7 +129,7 @@
 	"sourceSize": {"w":100,"h":100}
 },
 {
-	"filename": "stand_0001.png",
+	"filename": "stand.png",
 	"frame": {"x":1600,"y":0,"w":100,"h":100},
 	"rotated": false,
 	"trimmed": false,
@@ -143,6 +143,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1700,"h":100},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:3cf279cba934d5b9f07ee14268a2a83b:5f82e64ddba5fda8d7f50f8bf4ef75be:abf9baa50a59b53b09f50297342a183e$"
+	"smartupdate": "$TexturePacker:SmartUpdate:132dc91e6bd44acacf41900c26dcbc68:5f82e64ddba5fda8d7f50f8bf4ef75be:abf9baa50a59b53b09f50297342a183e$"
 }
 }
