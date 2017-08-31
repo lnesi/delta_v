@@ -7,7 +7,7 @@ class GameOverState extends LoadableState{
 		gameOverText.x=(Game.globalWidth/2)-gameOverText.width/2;
 		this.contentLayer.add(gameOverText);
 
-		let startMessage = new Phaser.BitmapText(this.game,0,Game.globalHeight-200,'PT Mono',"PLAY AGAIN",20);
+		let startMessage = new Phaser.BitmapText(this.game,0,Game.globalHeight-200,'PT Mono',"SAVE SCORE",20);
 		startMessage.x=(Game.globalWidth/2)-startMessage.width/2;
 		let tween:Phaser.Tween=this.game.add.tween(startMessage);
 		tween.to({alpha: 0.2},500,"Linear",true,0,-1,true);
@@ -24,7 +24,7 @@ class GameOverState extends LoadableState{
 	capturePointer(pointer:Phaser.Pointer){
 		if(pointer.isDown){
 			this.listening=false;
-			this.game.state.start("PlayState");
+			this.getGame().saveScoreState.save();
 		}
 	}
 }

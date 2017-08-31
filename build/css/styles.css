@@ -23,21 +23,18 @@ body {
   display: none;
   opacity: 0; }
 
-#nameInputScreen {
+#saveScoreScreen {
   color: #fff;
   background: #333; }
 
 #leaderboardScreen {
-  background-color: rgba(0, 0, 0, 0.6);
+  background: #333;
   color: #fff; }
   #leaderboardScreen h2 {
     text-align: center;
     font-weight: lighter; }
   #leaderboardScreen table {
     width: 100%; }
-  #leaderboardScreen .preloader {
-    text-align: center;
-    margin-top: 20%; }
 
 .text-left {
   text-align: left; }

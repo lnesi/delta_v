@@ -2,33 +2,27 @@
 
 class Leaderboard extends HTMLScreen{
 	
-	preloader:HTMLElement;
-	table:HTMLElement;
-	
+	leaderboardTable:HTMLElement;
+	dataRef:any;
 	constructor(game:Game){
 		super("leaderboardScreen",game);
+		this.leaderboardTable=document.getElementById("leaderboardTable");
 		
-		for (var i = 0; i < this.html.childNodes.length; i++) {
-			let e:any=this.html.childNodes[i];
-			if(e.className=="preloader"){
-				this.preloader=e;
-			};
-			if(e.className=="tableHolder"){
-				this.table=e;
-			}
-		}
 		
-		this.table.style.display="none";
-		this.preloader.style.display="none";
+		
 	}
-
 	public show(){
-		this.table.style.display="none";
-		this.preloader.style.display="block";
+		var html:string='';
+		this.game.firebase.leaderboardData.forEach(function(val:any,index:number){
+			html+="<tr>";
+			html+="<td>"+(index+1)+"</td>";
+			html+="<td>"+val.name+"</td>";
+			html+="<td class='text-right'>"+val.score+"</td>";
+			html+="</tr>";
+		});
+		this.leaderboardTable.innerHTML=html;
 		super.show();
-
-
 	}
-
+	
 	
 }

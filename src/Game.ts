@@ -5,18 +5,23 @@ class Game extends Phaser.Game{
 	public hero:HeroShip;
 	public currentScore:number=0;
 	public leaderboard:any;
-	public firebase:any;
+	public firebase:FirebaseInstance;
 	public user:any=null;
-	
+	public saveScoreState:any;
 	constructor(firebase:any){
 		super(Game.globalWidth,Game.globalHeight, Phaser.CANVAS);
-		this.firebase=firebase;
+		this.firebase=new FirebaseInstance(firebase);
+		this.firebase.onFirebaseOk=this.onFirebaseOk.bind(this);
+		this.firebase.connect();
 		
+
 		this.setupStates();
 		this.setupScreens();
-		//this.setupFireBase();
-		this.state.start("Boot");
 
+	}
+
+	onFirebaseOk(){
+		this.state.start("Boot");
 	}
 
 	setupStates(){
@@ -28,25 +33,9 @@ class Game extends Phaser.Game{
 
 	setupScreens(){
 		this.leaderboard=new Leaderboard(this);
+		this.saveScoreState=new SaveScoreState(this);
 	}
-	setupFireBase(){
-		this.firebase.auth().signInAnonymously().catch(function(error:any) {
-		  // Handle Errors here.
-		  var errorCode = error.code;
-		  var errorMessage = error.message;
-		  // ...
-		});
-
-		this.firebase.auth().onAuthStateChanged(function(user:any) {
-		  if (user) {
-		  	this.user=user;
-		    console.log(this.user)
-		  } else {
-		   	
-		  }
-		  // ...
-		}.bind(this));
-	}
+	
 	
 	globalWidth(){
 		return Game.globalWidth;
