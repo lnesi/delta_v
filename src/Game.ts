@@ -8,6 +8,8 @@ class Game extends Phaser.Game{
 	public firebase:FirebaseInstance;
 	public user:any=null;
 	public saveScoreState:any;
+	public levels:Array<any>=[];
+	public currentLevel:number=0;
 	constructor(firebase:any){
 		super(Game.globalWidth,Game.globalHeight, Phaser.CANVAS);
 		this.firebase=new FirebaseInstance(firebase);

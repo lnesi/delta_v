@@ -1,0 +1,91 @@
+// Este archivo es meramente para documentar
+{
+	"number": "1",
+	"name": "Demo Level",
+	"background": {
+		"speed":4, // Debe ser un numero divisible al tamaño del blocke de la textura dinamica 1,2,4,8
+		"static": {
+			"texture":"assets/img/background_01_0.png" //Simple PNG load
+		},
+		"atlas": {
+			"img": "assets/sprites/background_01.png",
+			"json": "assets/sprites/background_01.json" //Must have 8 textures "bge_01.png" to "bge_08.png"
+		}
+	},
+	"foreground": {
+		"atlas": {
+			"img": "assets/sprites/clouds.png", 
+			"json": "assets/sprites/clouds.json" //Must have 2 textures for the two clouds layers 01.png and 02.png
+		}
+	},
+	"enemy_textures": {
+		"enemy_01": {
+			"img": "assets/sprites/enemy_01.png",
+			"json": "assets/sprites/enemy_01.json"
+		},
+		"enemy_02": {
+			"img": "assets/sprites/enemy_02.png",
+			"json": "assets/sprites/enemy_02.json"
+		},
+		"enemy_03": {
+			"img": "assets/sprites/enemy_03.png",
+			"json": "assets/sprites/enemy_03.json"
+		}
+	},
+	"enemy_bullet_textures": {
+		"enemy_bullet_1": "assets/img/enemy_fire_bullet.png" //Simple PNG load
+	},
+	"enemies": {
+		"A": {
+			"texture": "enemy_03", //Must be defined in enemy_textures above
+			"bulletTexture": "enemy_bullet_1", //Must be defined in enemy_bullet_textures above
+			"type": 1,
+			"acceleration": 120,
+			"fireRate": 40,
+			"bulletsCount": 5,
+			"fireLimit": 5,
+			"reloadTime": 300,
+			"weaponDamege": 1,
+			"scoreValue": 10
+		},
+		"B": {
+			"texture": "enemy_02",
+			"bulletTexture": "enemy_bullet_1",
+			"type": 3,
+			"acceleration": 120,
+			"fireRate": 60,
+			"bulletsCount": 5,
+			"fireLimit": 5,
+			"reloadTime": 300,
+			"weaponDamege": 1,
+			"scoreValue": 10
+		},
+		"C": {
+			"texture": "enemy_01",
+			"bulletTexture": "enemy_bullet_1",
+			"type": 2,
+			"acceleration": 120,
+			"fireRate": 60,
+			"bulletsCount": 5,
+			"fireLimit": 5,
+			"reloadTime": 300,
+			"weaponDamege": 1,
+			"scoreValue": 10
+		}
+	},
+	"autoSpawner": {
+		"enabled": true,
+		"frecuency": 200, //Every Clock cycle
+		"enemies": ["A", "B", "C"] //Must be defined in enemies above
+	},
+	"timeline": {
+		"100": { // Cycle number. We can have only one event per cycle
+			"event": 0, //0 menas spawn enemy later other numbers will represents other type of actions
+			"data": {
+				"type": "A", //Must be degined in enemies above
+				"initX": 100
+			}
+		}
+
+	}
+}

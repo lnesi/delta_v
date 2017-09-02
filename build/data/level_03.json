@@ -1,0 +1,90 @@
+{
+	"number": "1",
+	"name": "Demo Level",
+	"background": {
+		"speed":4,
+		"static": {
+			"texture":"assets/img/background_01_0.png"
+		},
+		"atlas": {
+			"img": "assets/sprites/background_01.png",
+			"json": "assets/sprites/background_01.json"
+		}
+	},
+	"foreground": {
+		"atlas": {
+			"img": "assets/sprites/clouds.png",
+			"json": "assets/sprites/clouds.json"
+		}
+	},
+	"enemy_textures": {
+		"enemy_01": {
+			"img": "assets/sprites/enemy_01.png",
+			"json": "assets/sprites/enemy_01.json"
+		},
+		"enemy_02": {
+			"img": "assets/sprites/enemy_02.png",
+			"json": "assets/sprites/enemy_02.json"
+		},
+		"enemy_03": {
+			"img": "assets/sprites/enemy_03.png",
+			"json": "assets/sprites/enemy_03.json"
+		}
+	},
+	"enemy_bullet_textures": {
+		"enemy_bullet_1": "assets/img/enemy_fire_bullet.png"
+	},
+	"enemies": {
+		"A": {
+			"texture": "enemy_03",
+			"bulletTexture": "enemy_bullet_1",
+			"type": 1,
+			"acceleration": 120,
+			"fireRate": 40,
+			"bulletsCount": 5,
+			"fireLimit": 5,
+			"reloadTime": 300,
+			"weaponDamege": 1,
+			"scoreValue": 10
+		},
+		"B": {
+			"texture": "enemy_02",
+			"bulletTexture": "enemy_bullet_1",
+			"type": 3,
+			"acceleration": 120,
+			"fireRate": 60,
+			"bulletsCount": 5,
+			"fireLimit": 5,
+			"reloadTime": 300,
+			"weaponDamege": 1,
+			"scoreValue": 10
+		},
+		"C": {
+			"texture": "enemy_01",
+			"bulletTexture": "enemy_bullet_1",
+			"type": 2,
+			"acceleration": 120,
+			"fireRate": 60,
+			"bulletsCount": 5,
+			"fireLimit": 5,
+			"reloadTime": 300,
+			"weaponDamege": 1,
+			"scoreValue": 10
+		}
+	},
+	"autoSpawner": {
+		"enabled": true,
+		"frecuency": 200,
+		"enemies": ["A", "B", "C"]
+	},
+	"timeline": {
+		"100": {
+			"event": 0,
+			"data": {
+				"type": "A",
+				"initX": 100
+			}
+		}
+
+	}
+}

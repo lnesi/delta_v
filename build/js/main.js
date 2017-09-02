@@ -74,6 +74,8 @@ var Game = (function (_super) {
         var _this = _super.call(this, Game.globalWidth, Game.globalHeight, Phaser.CANVAS) || this;
         _this.currentScore = 0;
         _this.user = null;
+        _this.levels = [];
+        _this.currentLevel = 0;
         _this.firebase = new FirebaseInstance(firebase);
         _this.firebase.onFirebaseOk = _this.onFirebaseOk.bind(_this);
         _this.firebase.connect();
@@ -374,13 +376,13 @@ var SpaceBackground = (function (_super) {
     function SpaceBackground(state) {
         var _this = _super.call(this, state.game) || this;
         _this.state = state;
-        _this.ts = new Phaser.TileSprite(state.game, 0, 0, Game.globalWidth, Game.globalHeight, 'Background_01');
+        _this.ts = new Phaser.TileSprite(state.game, 0, 0, Game.globalWidth, Game.globalHeight, 'static_background');
         _this.addChild(_this.ts);
-        new BackgroundBlock(_this.state.getGame());
+        new BackgroundBlock(_this.state);
         return _this;
     }
     SpaceBackground.prototype.update = function () {
-        this.ts.tilePosition.y += 1;
+        this.ts.tilePosition.y += this.state.levelData.background.speed;
     };
     return SpaceBackground;
 }(Phaser.Group));
@@ -689,14 +691,15 @@ var EnemyWeapon = (function (_super) {
 }(Phaser.Weapon));
 var BackgroundBlock = (function (_super) {
     __extends(BackgroundBlock, _super);
-    function BackgroundBlock(game) {
-        var _this = _super.call(this, game) || this;
+    function BackgroundBlock(state) {
+        var _this = _super.call(this, state.getGame()) || this;
         _this.on = false;
         _this.blockWidth = 128;
         _this.blockHeight = 128;
         _this.clock = 0;
-        _this.game = game;
-        var filas = Math.ceil(game.globalHeight() / _this.blockHeight);
+        _this.state = state;
+        _this.game = state.getGame();
+        var filas = Math.ceil(_this.game.globalHeight() / _this.blockHeight);
         for (var i = 0; i < filas; i++) {
             var b = new BackgroundRow(_this);
             _this.addChild(b);
@@ -708,7 +711,7 @@ var BackgroundBlock = (function (_super) {
     }
     BackgroundBlock.prototype.update = function () {
         this.clock++;
-        if (this.clock % this.blockHeight == 0) {
+        if (this.clock % (this.blockHeight / this.state.levelData.background.speed) == 0) {
             this.addChild(new BackgroundRow(this));
         }
         _super.prototype.update.call(this);
@@ -719,10 +722,11 @@ var BackgroundRow = (function (_super) {
     __extends(BackgroundRow, _super);
     function BackgroundRow(bk) {
         var _this = _super.call(this, bk.game) || this;
+        _this.state = bk.state;
         _this.game = bk.game;
         var columns = Math.ceil(_this.game.globalWidth() / bk.blockWidth);
         for (var i = 0; i < columns; i++) {
-            var s = new Phaser.Sprite(_this.game, bk.blockWidth * i, 0, 'back_sprite_01', "bge_0" + Phaser.Math.between(1, 8) + ".png");
+            var s = new Phaser.Sprite(_this.game, bk.blockWidth * i, 0, 'back_sprite', "bge_0" + Phaser.Math.between(1, 8) + ".png");
             _this.addChild(s);
         }
         _this.y = -bk.blockHeight;
@@ -733,7 +737,7 @@ var BackgroundRow = (function (_super) {
             this.destroy(true);
         }
         else {
-            this.y += 1;
+            this.y += this.state.levelData.background.speed;
         }
     };
     return BackgroundRow;
@@ -917,9 +921,23 @@ var LandingState = (function (_super) {
         _super.prototype.preload.call(this);
         this.load.image('homescreen_logo', 'assets/img/homescreen_logo.png');
         this.game.load.bitmapFont('PT Mono', 'assets/fonts/ptmono.png', 'assets/fonts/ptmono.xml');
+        this.load.json('level_01', "data/level_01.json");
+        this.load.json('level_02', "data/level_02.json");
+        this.load.json('level_03', "data/level_03.json");
+        this.load.json('level_04', "data/level_04.json");
+        this.load.json('level_05', "data/level_05.json");
+        this.load.json('level_06', "data/level_06.json");
+        this.load.json('level_07', "data/level_07.json");
     };
     LandingState.prototype.create = function () {
         _super.prototype.create.call(this);
+        this.getGame().levels[0] = this.game.cache.getJSON('level_01');
+        this.getGame().levels[1] = this.game.cache.getJSON('level_02');
+        this.getGame().levels[2] = this.game.cache.getJSON('level_03');
+        this.getGame().levels[3] = this.game.cache.getJSON('level_04');
+        this.getGame().levels[4] = this.game.cache.getJSON('level_05');
+        this.getGame().levels[5] = this.game.cache.getJSON('level_06');
+        this.getGame().levels[6] = this.game.cache.getJSON('level_07');
         var logo = new Phaser.Image(this.game, Game.globalWidth / 2, Game.globalHeight / 2, "homescreen_logo");
         logo.anchor.x = 0.5;
         logo.anchor.y = 0.5;
@@ -950,7 +968,7 @@ var PlayState = (function (_super) {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.clock = 0;
         _this.allowKiller = true;
-        _this.lifes = 3;
+        _this.lifes = 2;
         return _this;
     }
     PlayState.prototype.init = function () {
@@ -962,29 +980,35 @@ var PlayState = (function (_super) {
         this.clock = 0;
     };
     PlayState.prototype.preload = function () {
+        this.levelData = this.getGame().levels[this.getGame().currentLevel];
+        console.log("CURRENT LEVEL DATA", this.levelData);
         _super.prototype.preload.call(this);
-        this.load.json('levelData', "data/level.json");
-        this.load.image('Background_01', 'assets/img/background_01_0.png');
-        this.load.atlasJSONArray('clouds', 'assets/sprites/clouds.png', 'assets/sprites/clouds.json');
-        this.load.atlasJSONArray('back_sprite_01', 'assets/sprites/background_01.png', 'assets/sprites/background_01.json');
+        this.load.image('static_background', this.levelData.background.static.texture);
+        this.load.atlasJSONArray('clouds', this.levelData.foreground.atlas.img, this.levelData.foreground.atlas.json);
+        this.load.atlasJSONArray('back_sprite', this.levelData.background.atlas.img, this.levelData.background.atlas.json);
+        //Load Enemy Textures
+        for (var texture_key in this.levelData.enemy_textures) {
+            this.load.atlasJSONArray(texture_key, this.levelData.enemy_textures[texture_key].img, this.levelData.enemy_textures[texture_key].json);
+        }
+        //Load Enemy bullets textures
+        for (var texture_key in this.levelData.enemy_bullet_textures) {
+            this.load.image(texture_key, this.levelData.enemy_bullet_textures[texture_key]);
+        }
+        //Static Data
         this.load.image('uibg', 'assets/img/uibg.png');
-        this.load.atlasXML('mainsprite', 'assets/sprites/sheet.png', 'assets/sprites/sheet.xml');
-        this.load.spritesheet('explosion', 'assets/img/explosion.png', 100, 100);
-        this.load.atlasJSONArray('hero', 'assets/sprites/hero.png', 'assets/sprites/hero.json');
-        this.load.atlasJSONArray('enemy_01', 'assets/sprites/enemy_01.png', 'assets/sprites/enemy_01.json');
-        this.load.atlasJSONArray('enemy_02', 'assets/sprites/enemy_02.png', 'assets/sprites/enemy_02.json');
-        this.load.atlasJSONArray('enemy_03', 'assets/sprites/enemy_03.png', 'assets/sprites/enemy_03.json');
         this.load.atlasJSONArray('vidas', 'assets/sprites/vidas.png', 'assets/sprites/vidas.json');
-        this.load.image('enemy_fire_bullet', 'assets/img/enemy_fire_bullet.png');
-        this.load.image('hero_fire_bullet', 'assets/img/hero_fire_bullet.png');
-        this.load.audio('sfx_laser1', "assets/audio/sfx_laser1.ogg");
-        this.load.audio('sfx_explosion', "assets/audio/sfx_explosion.mp3");
         this.game.load.bitmapFont('PT Mono', 'assets/fonts/ptmono.png', 'assets/fonts/ptmono.xml');
+        this.load.atlasXML('mainsprite', 'assets/sprites/sheet.png', 'assets/sprites/sheet.xml');
+        this.load.atlasJSONArray('hero', 'assets/sprites/hero.png', 'assets/sprites/hero.json');
+        this.load.image('hero_fire_bullet', 'assets/img/hero_fire_bullet.png');
+        // this.load.spritesheet('explosion','assets/img/explosion.png',100,100);
+        // this.load.audio('sfx_laser1',"assets/audio/sfx_laser1.ogg");
+        // this.load.audio('sfx_explosion',"assets/audio/sfx_explosion.mp3");
+        // 
     };
     PlayState.prototype.create = function () {
         _super.prototype.create.call(this);
         this.autoCheck = document.getElementById("autospawn");
-        this.levelData = this.game.cache.getJSON('levelData');
         new SpaceBackground(this);
         new SpaceForeground(this, "01.png", 1.5);
         this.weaponsLayer = new Phaser.Group(this.game);
@@ -995,21 +1019,14 @@ var PlayState = (function (_super) {
         this.enemyCollider = new Phaser.Sprite(this.game, 0, Game.globalHeight + (Enemy.offsetHeight / 2));
         this.physics.enable(this.enemyCollider, Phaser.Physics.ARCADE);
         this.enemyCollider.body.setSize(Game.globalWidth * 2, 10, 0, 0);
+        this.interfase = new DisplayInterfase(this);
+        this.foregroundLayer.add(this.interfase);
         this.enemyCollider.x = -Game.globalWidth / 2;
         this.enemyLayer.add(this.enemyCollider);
-        console.log("DATA OK:", this.levelData);
         this.hero = new HeroShip(this);
         this.heroLayer.add(this.hero);
         this.initTime = this.game.time.now;
         this.hero.init();
-        // this.enemy=new Enemy(this,0,"enemy_01"),
-        // this.enemyLayer.addChild(this.enemy);
-        // this.enemy.init();
-        // let e=new Enemy01(this,1);
-        // this.enemyLayer.addChild(e);
-        // e.init();
-        this.interfase = new DisplayInterfase(this);
-        this.foregroundLayer.add(this.interfase);
     };
     PlayState.prototype.spawn = function () {
         var textureSelect = document.getElementById("texture");
@@ -1036,31 +1053,32 @@ var PlayState = (function (_super) {
     };
     PlayState.prototype.update = function () {
         this.clock++;
-        // if(this.levelData.timeline[this.clock]){
-        // 	switch(this.levelData.timeline[this.clock].event){
-        // 		case 0:
-        // 			this.spawnScriptedEnemey(this.levelData.timeline[this.clock]);
-        // 			break;
-        // 	}
-        // }
-        //this.game.physics.arcade.collide(this.bodys);
-        if (this.autoCheck.checked)
-            this.spawner();
+        if (this.levelData.timeline[this.clock]) {
+            switch (this.levelData.timeline[this.clock].event) {
+                case 0:
+                    this.spawnEnemy(this.levelData.timeline[this.clock].data);
+                    break;
+            }
+        }
+        if (this.levelData.autoSpawner.enabled) {
+            this.autoSpawner();
+        }
     };
-    PlayState.prototype.spawnScriptedEnemey = function (data) {
-        var e = new Enemy(this, data.texture, data.type, data.acceleration, data.scoreValue);
-        new EnemyWeapon(e, "enemy_fire_bullet", data.fireRate, data.bulletsCount, data.fireLimit, data.reloadTime, data.weaponDamege);
-        this.enemyLayer.addChild(e);
-        e.init();
+    PlayState.prototype.spawnEnemy = function (data) {
+        console.log("spawnEnemy", this.levelData.enemies[data.type]);
+        var texture = this.levelData.enemies[data.type].texture;
+        var type = this.levelData.enemies[data.type].type;
+        var enemy = new Enemy(this, texture, type, this.levelData.enemies[data.type].acceleration, this.levelData.enemies[data.type].scoreValue);
+        new EnemyWeapon(enemy, this.levelData.enemies[data.type].bulletTexture, this.levelData.enemies[data.type].fireRate, this.levelData.enemies[data.type].bulletsCount, this.levelData.enemies[data.type].fireLimit, this.levelData.enemies[data.type].reloadTime, this.levelData.enemies[data.type].weaponDamege);
+        this.enemyLayer.addChild(enemy);
+        enemy.init(data.initX);
     };
-    PlayState.prototype.spawner = function () {
-        if ((this.clock % 100) == 0) {
-            var texture = Enemy.TEXTURES[Phaser.Math.between(0, Enemy.TEXTURES.length - 1)];
-            var type = Enemy.AIs[Phaser.Math.between(0, Enemy.AIs.length - 1)];
-            var enemy = new Enemy(this, texture, type);
-            new EnemyWeapon(enemy, "enemy_fire_bullet");
-            this.enemyLayer.addChild(enemy);
-            enemy.init();
+    PlayState.prototype.autoSpawner = function () {
+        if ((this.clock % this.levelData.autoSpawner.frecuency) == 0) {
+            var enemyDefinitionKey = this.levelData.autoSpawner.enemies[Phaser.Math.between(0, this.levelData.autoSpawner.enemies.length - 1)];
+            var enemyDefinition = { "initX": null, "type": enemyDefinitionKey };
+            console.log("autoSpawner", enemyDefinition);
+            this.spawnEnemy(enemyDefinition);
         }
     };
     PlayState.prototype.collisionHandler = function () {
